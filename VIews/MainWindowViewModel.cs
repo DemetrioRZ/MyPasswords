@@ -1,27 +1,17 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Interfaces.Logic;
-using Interfaces.ViewModels;
 using Microsoft.Win32;
 using Views.Common;
 
 namespace Views
 {
-    public class MainWindowViewModel : INotifyPropertyChanged, IMainWindowViewModel
+    public class MainWindowViewModel : ViewModelBase
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        
         public ICommand OpenFileCommand => _openFileCommand ?? (_openFileCommand = new Command(OpenFile));
 
         public MainWindowViewModel(IDecryptLogic decryptLogic)
         {
             _decryptLogic = decryptLogic;
-        }
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private async void OpenFile(object param)

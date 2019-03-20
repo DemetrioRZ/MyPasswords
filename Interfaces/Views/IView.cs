@@ -1,10 +1,8 @@
-﻿using Interfaces.ViewModels;
-
-namespace Interfaces.Views
+﻿namespace Interfaces.Views
 {
     public interface IView
     {
-        IViewModel ViewModel { get; }
+        object DataContext { get; }
 
         void Show();
 

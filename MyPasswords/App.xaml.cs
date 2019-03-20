@@ -2,7 +2,6 @@
 using System.Windows.Threading;
 using Autofac;
 using Interfaces.Logic;
-using Interfaces.ViewModels;
 using Interfaces.Views;
 using Logic.ExceptionHelper;
 using Logic.Logic;
@@ -71,7 +70,7 @@ namespace MyPasswords
         /// <param name="builder">ContainerBuilder Autofac</param>
         private void RegisterViewModels(ContainerBuilder builder)
         {
-            builder.RegisterType<MainWindowViewModel>().As<IMainWindowViewModel>().InstancePerDependency();
+            builder.RegisterType<MainWindowViewModel>().InstancePerDependency();
         }
 
         /// <summary>

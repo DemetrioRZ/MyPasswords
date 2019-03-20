@@ -1,6 +1,6 @@
 ﻿using System.Windows;
-using Interfaces.ViewModels;
 using Interfaces.Views;
+using Views.Common;
 
 namespace Views
 {
@@ -12,13 +12,13 @@ namespace Views
         /// <summary>
         /// Модель представления вида основного окна.
         /// </summary>
-        private readonly IMainWindowViewModel _mainWindowViewModel;
+        private readonly MainWindowViewModel _mainWindowViewModel;
 
         /// <summary>
         /// Конструктор.
         /// </summary>
         /// <param name="mainWindowViewModel">Модель представления вида основного окна</param>
-        public MainWindow(IMainWindowViewModel mainWindowViewModel)
+        public MainWindow(MainWindowViewModel mainWindowViewModel)
         {
             InitializeComponent();
             
@@ -29,6 +29,6 @@ namespace Views
         /// <summary>
         /// Модель представления вида.
         /// </summary>
-        public IViewModel ViewModel => _mainWindowViewModel;
+        public ViewModelBase ViewModel => _mainWindowViewModel;
     }
 }

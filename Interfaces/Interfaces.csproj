@@ -45,8 +45,6 @@
     <Compile Include="Logic\IEncryptLogic.cs" />
     <Compile Include="Logic\IExceptionHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModels\IMainWindowViewModel.cs" />
-    <Compile Include="ViewModels\IViewModel.cs" />
     <Compile Include="Views\IMainWindowView.cs" />
     <Compile Include="Views\IView.cs" />
   </ItemGroup>
