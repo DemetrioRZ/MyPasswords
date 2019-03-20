@@ -3,8 +3,7 @@ using System.Windows.Threading;
 using Autofac;
 using Interfaces.Logic;
 using Interfaces.Views;
-using Logic.ExceptionHelper;
-using Logic.Logic;
+using Logic;
 using Views;
 
 namespace MyPasswords
@@ -82,6 +81,9 @@ namespace MyPasswords
             builder.RegisterType<ExceptionHelper>().As<IExceptionHelper>().InstancePerDependency();
             builder.RegisterType<DecryptLogic>().As<IDecryptLogic>().InstancePerDependency();
             builder.RegisterType<EncryptLogic>().As<IEncryptLogic>().InstancePerDependency();
+            builder.RegisterType<EncryptDecryptLogic>().As<IEncryptDecryptLogic>().InstancePerDependency();
+            builder.RegisterType<AccountsLogic>().As<IAccountsLogic>().InstancePerDependency();
+            builder.RegisterType<AccountsSerializer>().As<IAccountsSerializer>().InstancePerDependency();
         }
 
     }

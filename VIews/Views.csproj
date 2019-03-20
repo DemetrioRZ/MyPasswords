@@ -64,6 +64,10 @@
       <Project>{4ccb093a-aa7b-41d7-81d7-7c9dd481851a}</Project>
       <Name>Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{ae82086a-ad66-4620-bffb-006d2d742117}</Project>
+      <Name>Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\new-file-24.png" />

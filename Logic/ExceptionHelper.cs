@@ -2,7 +2,7 @@
 using System.Text;
 using Interfaces.Logic;
 
-namespace Logic.ExceptionHelper
+namespace Logic
 {
     public class ExceptionHelper : IExceptionHelper
     {

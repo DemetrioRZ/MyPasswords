@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,15 +42,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExceptionHelper\ExceptionHelper.cs" />
-    <Compile Include="Logic\DecryptLogic.cs" />
-    <Compile Include="Logic\EncryptLogic.cs" />
+    <Compile Include="AccountsLogic.cs" />
+    <Compile Include="AccountsSerializer.cs" />
+    <Compile Include="EncryptDecryptLogic.cs" />
+    <Compile Include="ExceptionHelper.cs" />
+    <Compile Include="DecryptLogic.cs" />
+    <Compile Include="EncryptLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Interfaces\Interfaces.csproj">
       <Project>{4ccb093a-aa7b-41d7-81d7-7c9dd481851a}</Project>
       <Name>Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{ae82086a-ad66-4620-bffb-006d2d742117}</Project>
+      <Name>Model</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

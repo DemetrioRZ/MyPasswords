@@ -1,6 +1,8 @@
-﻿using System.Windows.Input;
+﻿using System.Collections.ObjectModel;
+using System.Windows.Input;
 using Interfaces.Logic;
 using Microsoft.Win32;
+using Model;
 using Views.Common;
 
 namespace Views
@@ -9,9 +11,11 @@ namespace Views
     {
         public ICommand OpenFileCommand => _openFileCommand ?? (_openFileCommand = new Command(OpenFile));
 
-        public MainWindowViewModel(IDecryptLogic decryptLogic)
+        public ObservableCollection<Account> Accounts { get; private set; }
+
+        public MainWindowViewModel(IAccountsLogic accountsLogic)
         {
-            _decryptLogic = decryptLogic;
+            _accountsLogic = accountsLogic;
         }
 
         private async void OpenFile(object param)
@@ -26,13 +30,15 @@ namespace Views
             if (string.IsNullOrWhiteSpace(_filePath))
                 return;
 
-            var decrypted = await _decryptLogic.Decrypt(_filePath);
+            var accounts = await _accountsLogic.GetAccounts(_filePath);
+
+            Accounts = new ObservableCollection<Account>(accounts);
         }
 
         private ICommand _openFileCommand;
 
         private string _filePath;
 
-        private readonly IDecryptLogic _decryptLogic;
+        private IAccountsLogic _accountsLogic;
     }
 }
