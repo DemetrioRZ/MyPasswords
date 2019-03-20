@@ -1,0 +1,17 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/MyPasswords/v15
+/CommonUI/obj/Debug
+/Interfaces/bin/Debug
+/Interfaces/obj/Debug
+/Logic/bin/Debug
+/Logic/obj/Debug
+/Model/bin/Debug
+/Model/obj/Debug
+/MyPasswords/bin/Debug
+/MyPasswords/obj/Debug
+/packages/Autofac.4.9.1
+/VIews/bin/Debug
+/VIews/obj/Debug
