@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Json;
+using System.Text;
 using System.Threading.Tasks;
 using Interfaces.Logic;
 using Model;
@@ -18,6 +21,7 @@ namespace Logic
                 using (var ms = new MemoryStream())
                 {
                     _jsonSerializer.WriteObject(ms, accounts);
+                    ms.Seek(0, SeekOrigin.Begin);
                     using (var sr = new StreamReader(ms))
                     {
                         return sr.ReadToEnd();
@@ -35,6 +39,8 @@ namespace Logic
                     using (var sw = new StreamWriter(ms))
                     {
                         sw.Write(json);
+                        sw.Flush(); // todo: без этого не работает, разобраться почему
+                        ms.Seek(0, SeekOrigin.Begin);
 
                         if (_jsonSerializer.ReadObject(ms) is ICollection<Account> accounts)
                             return accounts;

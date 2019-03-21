@@ -7,8 +7,8 @@
     <ProjectGuid>{BAD48907-12E6-46A4-B398-A512B9BDAB9B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VIews</RootNamespace>
-    <AssemblyName>VIews</AssemblyName>
+    <RootNamespace>Views</RootNamespace>
+    <AssemblyName>Views</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -77,6 +77,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\file-info-24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\add-24.png" />
+    <Resource Include="Images\edit-24.png" />
+    <Resource Include="Images\save-24.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
