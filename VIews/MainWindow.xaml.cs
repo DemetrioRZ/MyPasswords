@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using Interfaces.Views;
-using Views.Common;
 
 namespace Views
 {
@@ -25,10 +24,5 @@ namespace Views
             _mainWindowViewModel = mainWindowViewModel;
             DataContext = _mainWindowViewModel;
         }
-
-        /// <summary>
-        /// Модель представления вида.
-        /// </summary>
-        public ViewModelBase ViewModel => _mainWindowViewModel;
     }
 }

@@ -12,32 +12,65 @@ namespace Views
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private ICommand _newFileCommand;
-
-        private ICommand _openFileCommand;
-
-        private ICommand _saveFileCommand;
-
-        private ICommand _createAccountCommand;
-
-        private ICommand _editAccountCommand;
-
-        private string _filePath;
-
-        private ObservableCollection<Account> _accounts;
-
+        /// <summary>
+        /// Логика работы с аккаунтами
+        /// </summary>
         private readonly IAccountsLogic _accountsLogic;
 
-        public ICommand NewFileCommand => _newFileCommand ?? (_newFileCommand = new Command(NewFile));
+        /// <summary>
+        /// Путь к сериализованному файлу с аккаунтами.
+        /// </summary>
+        private string _serializedAccountsFilePath;
 
-        public ICommand OpenFileCommand => _openFileCommand ?? (_openFileCommand = new Command(OpenFile));
+        /// <summary>
+        /// Коллекция отображаемых аккаунтов
+        /// </summary>
+        private ObservableCollection<Account> _accounts;
 
-        public ICommand SaveFileCommand => _saveFileCommand ?? (_saveFileCommand = new Command(SaveFile, o => Accounts != null && Accounts.Any()));
+        /// <summary>
+        /// Выбранная модель аккаунта.
+        /// </summary>
+        private Account _selectedAccount;
 
-        public ICommand CreateAccountCommand => _createAccountCommand ?? (_createAccountCommand = new Command(CreateAccount, o => Accounts != null));
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="accountsLogic">Логика работы с аккаунтами</param>
+        public MainWindowViewModel(IAccountsLogic accountsLogic)
+        {
+            _accountsLogic = accountsLogic;
 
-        public ICommand EditAccountCommand => _editAccountCommand ?? (_editAccountCommand = new Command(EditAccount, o => Accounts != null && Accounts.Any()));
+            InitializeCommands();
+        }
 
+        /// <summary>
+        /// Команда создания нового файла с аккаунтами.
+        /// </summary>
+        public ICommand NewFileCommand { get; private set; }
+
+        /// <summary>
+        /// Команда открытия файла с аккаунтами.
+        /// </summary>
+        public ICommand OpenFileCommand { get; private set; }
+
+        /// <summary>
+        /// Команда сохранения файла с аккаунтами.
+        /// </summary>
+        public ICommand SaveFileCommand { get; private set; }
+
+        /// <summary>
+        /// Команда создания нового аккаунта для хранения.
+        /// </summary>
+        public ICommand CreateAccountCommand { get; private set; }
+
+        /// <summary>
+        /// Команда редактирования выбранного аккаунта.
+        /// </summary>
+        public ICommand EditAccountCommand { get; private set; }
+
+        /// <summary>
+        /// Коллекция отображаемых аккаунтов
+        /// </summary>
         public ObservableCollection<Account> Accounts
         {
             get => _accounts;
@@ -48,57 +81,96 @@ namespace Views
             }
         }
 
-        public MainWindowViewModel(IAccountsLogic accountsLogic)
+        /// <summary>
+        /// Выбранный аккаунт.
+        /// </summary>
+        public Account SelectedAccount
         {
-            _accountsLogic = accountsLogic;
+            get => _selectedAccount;
+            set
+            {
+                _selectedAccount = value;
+                OnPropertyChanged(nameof(SelectedAccount));
+            }
         }
 
+        /// <summary>
+        /// Инициализация команд.
+        /// </summary>
+        private void InitializeCommands()
+        {
+            NewFileCommand = new Command(NewFile);
+            OpenFileCommand = new Command(OpenFileAsync);
+            SaveFileCommand = new Command(SaveFileAsync, x => Accounts != null);
+            CreateAccountCommand = new Command(CreateAccount, x => Accounts != null);
+            EditAccountCommand = new Command(EditAccount, x => Accounts != null && Accounts.Any() && SelectedAccount != null);
+        }
+
+        /// <summary>
+        /// Создаёт новый для хранения аккаунтов.
+        /// </summary>
         private void NewFile(object param)
         {
             Accounts = new ObservableCollection<Account>(new List<Account>());
         }
 
-        private async void OpenFile(object param)
+        /// <summary>
+        /// Команда открытия файла с аккаунтами.
+        /// </summary>
+        private async void OpenFileAsync(object param)
         {
             var ofd = new OpenFileDialog {Multiselect = false, Filter = "All files (*.*)|*.*"};
             
             if (ofd.ShowDialog() != true)
                 return;
 
-            _filePath = ofd.FileName;
+            _serializedAccountsFilePath = ofd.FileName;
 
-            if (string.IsNullOrWhiteSpace(_filePath))
+            if (string.IsNullOrWhiteSpace(_serializedAccountsFilePath))
                 return;
 
-            var accounts = await _accountsLogic.GetAccounts(_filePath);
+            var accounts = await _accountsLogic.GetAccounts(_serializedAccountsFilePath);
 
             Accounts = new ObservableCollection<Account>(accounts);
         }
 
-        private async void SaveFile(object param)
+        /// <summary>
+        /// Сохраняет файл с аккаунтами на диск.
+        /// </summary>
+        private async void SaveFileAsync(object param)
         {
             var sfd = new SaveFileDialog { Filter = "All files (*.*)|*.*" };
-            if (!string.IsNullOrWhiteSpace(_filePath))
-                sfd.FileName = _filePath;
+            if (!string.IsNullOrWhiteSpace(_serializedAccountsFilePath))
+                sfd.FileName = _serializedAccountsFilePath;
 
             if (sfd.ShowDialog() != true)
                 return;
 
-            _filePath = sfd.FileName;
+            _serializedAccountsFilePath = sfd.FileName;
 
-            if (string.IsNullOrWhiteSpace(_filePath))
+            if (string.IsNullOrWhiteSpace(_serializedAccountsFilePath))
                 return;
 
-            await _accountsLogic.SaveAccounts(Accounts, _filePath);
+            await _accountsLogic.SaveAccounts(Accounts, _serializedAccountsFilePath);
         }
 
+        /// <summary>
+        /// Создаёт новый аккаунт.
+        /// </summary>
         private void CreateAccount(object param)
         {
             Accounts.Add(new Account { Id = Guid.NewGuid(), Login = "Login", Password = "password", WebSite = "website", Comment = "comment"});
         }
 
+        /// <summary>
+        /// Редактирует выбранный аккаунт.
+        /// </summary>
         private void EditAccount(object param)
         {
+            if (!(param is Account account))
+                return;
+
+            // todo: открыть в окне на редактирование
 
         }
     }

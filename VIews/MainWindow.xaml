@@ -32,7 +32,7 @@
                             <Image Source="Images/add-24.png"></Image>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Edit Account" Command="{Binding EditAccountCommand}">
+                    <MenuItem Header="Edit Account" Command="{Binding EditAccountCommand}"  CommandParameter="{Binding SelectedAccount}">
                         <MenuItem.Icon>
                             <Image Source="Images/edit-24.png"></Image>
                         </MenuItem.Icon>
@@ -64,7 +64,7 @@
                     <Button Height="24" Width="24" ToolTip="Создать новый аккаунт" Command="{Binding CreateAccountCommand}">
                         <Image Source="Images/add-24.png"></Image>
                     </Button>
-                    <Button Height="24" Width="24" ToolTip="Редактировать аккаунт" Command="{Binding EditAccountCommand}">
+                    <Button Height="24" Width="24" ToolTip="Редактировать аккаунт" Command="{Binding EditAccountCommand}" CommandParameter="{Binding SelectedAccount}">
                         <Image Source="Images/edit-24.png"></Image>
                     </Button>
                 </ToolBar>
@@ -74,7 +74,9 @@
         </StackPanel>
 
         <!-- основной грид с паролями -->
-        <DataGrid Name="PasswordsGrid" DockPanel.Dock="Bottom" ItemsSource="{Binding Accounts}" IsReadOnly="True" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False">
+        <DataGrid Name="PasswordsGrid" DockPanel.Dock="Bottom" 
+                  ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedAccount}"
+                  IsReadOnly="True" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False" >
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Path=Login, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Header="Login" Width="140"></DataGridTextColumn>
                 <DataGridTextColumn Binding="{Binding Path=WebSite, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Header="Web site" Width="150"></DataGridTextColumn>
