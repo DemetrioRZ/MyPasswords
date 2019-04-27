@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using Interfaces.Logic;
+using Interfaces.Views;
 using Microsoft.Win32;
 using Model;
 using Views.Common;
@@ -16,6 +17,11 @@ namespace Views
         /// Логика работы с аккаунтами
         /// </summary>
         private readonly IAccountsLogic _accountsLogic;
+
+        /// <summary>
+        /// Функтор получения окна редактора аккаунта
+        /// </summary>
+        private readonly Func<IEditAccountWindowView> _getEditAccountWindowView;
 
         /// <summary>
         /// Путь к сериализованному файлу с аккаунтами.
@@ -36,9 +42,11 @@ namespace Views
         /// Конструктор.
         /// </summary>
         /// <param name="accountsLogic">Логика работы с аккаунтами</param>
-        public MainWindowViewModel(IAccountsLogic accountsLogic)
+        /// <param name="getEditAccountWindowView">Функтор получения окна редактора аккаунта</param>
+        public MainWindowViewModel(IAccountsLogic accountsLogic, Func<IEditAccountWindowView> getEditAccountWindowView)
         {
             _accountsLogic = accountsLogic;
+            _getEditAccountWindowView = getEditAccountWindowView;
 
             InitializeCommands();
         }
@@ -159,7 +167,10 @@ namespace Views
         /// </summary>
         private void CreateAccount(object param)
         {
-            Accounts.Add(new Account { Id = Guid.NewGuid(), Login = "Login", Password = "password", WebSite = "website", Comment = "comment"});
+            //Accounts.Add(new Account { Id = Guid.NewGuid(), Login = "Login", Password = "password", WebSite = "website", Comment = "comment"});
+            var editWindow = _getEditAccountWindowView();
+            if (editWindow.ShowDialog() != true)
+                return;
         }
 
         /// <summary>

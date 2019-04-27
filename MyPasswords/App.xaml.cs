@@ -61,6 +61,7 @@ namespace MyPasswords
         private void RegisterViews(ContainerBuilder builder)
         {
             builder.RegisterType<MainWindow>().As<IMainWindowView>().InstancePerDependency();
+            builder.RegisterType<EditAccountWindow>().As<IEditAccountWindowView>().InstancePerDependency();
         }
 
         /// <summary>
@@ -70,6 +71,7 @@ namespace MyPasswords
         private void RegisterViewModels(ContainerBuilder builder)
         {
             builder.RegisterType<MainWindowViewModel>().InstancePerDependency();
+            builder.RegisterType<EditAccountWindowViewModel>().InstancePerDependency();
         }
 
         /// <summary>
