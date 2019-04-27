@@ -167,10 +167,15 @@ namespace Views
         /// </summary>
         private void CreateAccount(object param)
         {
-            //Accounts.Add(new Account { Id = Guid.NewGuid(), Login = "Login", Password = "password", WebSite = "website", Comment = "comment"});
+            var account = new Account { Id = Guid.NewGuid() };
             var editWindow = _getEditAccountWindowView();
+
+            editWindow.EditingAccount = account;
+
             if (editWindow.ShowDialog() != true)
                 return;
+
+            Accounts.Add(editWindow.EditingAccount);
         }
 
         /// <summary>

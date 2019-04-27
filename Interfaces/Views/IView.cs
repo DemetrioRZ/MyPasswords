@@ -7,5 +7,9 @@
         void Show();
 
         bool? ShowDialog();
+
+        void Close();
+
+        bool? DialogResult { get; set; }
     }
 }

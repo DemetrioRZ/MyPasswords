@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using Interfaces.Views;
+using Model;
 
 namespace Views
 {
@@ -9,6 +10,11 @@ namespace Views
     public partial class EditAccountWindow : Window, IEditAccountWindowView
     {
         /// <summary>
+        /// Модель представления вида окна.
+        /// </summary>
+        private readonly EditAccountWindowViewModel _editAccountWindowViewModel;
+
+        /// <summary>
         /// Конструктор.
         /// </summary>
         /// <param name="editAccountWindowViewModel">модель представления вида окна редактора аккаунта</param>
@@ -16,7 +22,17 @@ namespace Views
         {
             InitializeComponent();
 
-            this.DataContext = editAccountWindowViewModel;
+            _editAccountWindowViewModel = editAccountWindowViewModel;
+            this.DataContext = _editAccountWindowViewModel;
+        }
+
+        /// <summary>
+        /// Редактируемый аккаунт.
+        /// </summary>
+        public Account EditingAccount
+        {
+            get => _editAccountWindowViewModel.EditingAccount;
+            set => _editAccountWindowViewModel.EditingAccount = value;
         }
     }
 }
