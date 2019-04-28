@@ -32,12 +32,12 @@ namespace Views
         /// <summary>
         /// Коллекция отображаемых аккаунтов
         /// </summary>
-        private ObservableCollection<Account> _accounts;
+        private ObservableCollection<AccountViewModel> _accounts;
 
         /// <summary>
         /// Выбранная модель аккаунта.
         /// </summary>
-        private Account _selectedAccount;
+        private AccountViewModel _selectedAccount;
 
         /// <summary>
         /// Конструктор.
@@ -80,7 +80,7 @@ namespace Views
         /// <summary>
         /// Коллекция отображаемых аккаунтов
         /// </summary>
-        public ObservableCollection<Account> Accounts
+        public ObservableCollection<AccountViewModel> Accounts
         {
             get => _accounts;
             private set
@@ -105,7 +105,7 @@ namespace Views
         /// <summary>
         /// Выбранный аккаунт.
         /// </summary>
-        public Account SelectedAccount
+        public AccountViewModel SelectedAccount
         {
             get => _selectedAccount;
             set
@@ -135,7 +135,7 @@ namespace Views
             if (Accounts != null && MessageBox.Show("Create new file?", "New file", MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
                 return;
                 
-            Accounts = new ObservableCollection<Account>(new List<Account>());
+            Accounts = new ObservableCollection<AccountViewModel>(new List<AccountViewModel>());
         }
 
         /// <summary>
@@ -157,8 +157,9 @@ namespace Views
                 return;
 
             var accounts = await _accountsLogic.GetAccounts(_serializedAccountsFilePath);
+            var accountViewModels = accounts.Select(x => new AccountViewModel().For(x)).ToList();
 
-            Accounts = new ObservableCollection<Account>(accounts);
+            Accounts = new ObservableCollection<AccountViewModel>(accountViewModels);
         }
 
         /// <summary>
@@ -178,7 +179,7 @@ namespace Views
             if (string.IsNullOrWhiteSpace(_serializedAccountsFilePath))
                 return;
 
-            await _accountsLogic.SaveAccounts(Accounts, _serializedAccountsFilePath);
+            await _accountsLogic.SaveAccounts(Accounts.Select(x => x.GetModel()).ToList(), _serializedAccountsFilePath);
         }
 
         /// <summary>
@@ -186,15 +187,17 @@ namespace Views
         /// </summary>
         private void CreateAccount(object param)
         {
-            var account = new Account();
+            var account = new AccountViewModel().For(new Account());
             var editWindow = _getEditAccountWindowView();
+            if (!(editWindow.DataContext is EditAccountWindowViewModel editWindowViewModel))
+                return;
 
-            editWindow.EditingAccount = account;
+            editWindowViewModel.EditingAccount = account;
 
             if (editWindow.ShowDialog() != true)
                 return;
 
-            Accounts.Add(editWindow.EditingAccount);
+            Accounts.Add(editWindowViewModel.EditingAccount);
         }
 
         /// <summary>
@@ -202,12 +205,14 @@ namespace Views
         /// </summary>
         private void EditAccount(object param)
         {
-            if (!(param is Account account))
+            if (!(param is AccountViewModel account))
                 return;
 
             var editWindow = _getEditAccountWindowView();
+            if (!(editWindow.DataContext is EditAccountWindowViewModel editWindowViewModel))
+                return;
 
-            editWindow.EditingAccount = account;
+            editWindowViewModel.EditingAccount = account;
 
             editWindow.ShowDialog();
         }

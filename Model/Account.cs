@@ -1,69 +1,51 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Security;
 
 namespace Model
 {
+    /// <summary>
+    /// Модель аккаунта
+    /// </summary>
     [DataContract]
-    public class Account : INotifyPropertyChanged
+    public class Account
     {
-        private string _login;
-
-        private string _website;
-
-        private string _comment;
-
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
         public Account()
         {
             Id = Guid.NewGuid();
             Password = new SecureString();
         }
 
+        /// <summary>
+        /// Идентификатор модели
+        /// </summary>
         [DataMember]
         public Guid Id { get; set; }
 
+        /// <summary>
+        /// Логин
+        /// </summary>
         [DataMember]
-        public string Login
-        {
-            get => _login;
-            set
-            {
-                _login = value;
-                OnPropertyChanged(nameof(Login));
-            }
-        }
-
+        public string Login { get; set; }
+        
+        /// <summary>
+        /// Пароль
+        /// </summary>
         public SecureString Password { get; set; }
 
+        /// <summary>
+        /// Сайт ресурса
+        /// </summary>
         [DataMember]
-        public string WebSite
-        {
-            get => _website;
-            set
-            {
-                _website = value;
-                OnPropertyChanged(nameof(WebSite));
-            }
-        }
-
-        [DataMember]
-        public string Comment
-        {
-            get => _comment;
-            set
-            {
-                _comment = value;
-                OnPropertyChanged(nameof(Comment));
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        public string WebSite { get; set; }
+        
+        /// <summary>
+        /// Комментарий к аккаунту
+        /// </summary>
+        [DataMember] 
+        public string Comment { get; set; }
     }
 }

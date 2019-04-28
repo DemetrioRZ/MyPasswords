@@ -15,7 +15,7 @@ namespace Views
         /// <summary>
         /// Редактируемый аккаунт.
         /// </summary>
-        private Account _account;
+        private AccountViewModel _account;
 
         /// <summary>
         /// Логин.
@@ -42,6 +42,14 @@ namespace Views
         /// </summary>
         public EditAccountWindowViewModel()
         {
+            InitializeCommands();
+        }
+
+        /// <summary>
+        /// Инициализация команд.
+        /// </summary>
+        private void InitializeCommands()
+        {
             OkCommand = new Command(Ok, CanOk);
             CancelCommand = new Command(Cancel);
         }
@@ -59,7 +67,7 @@ namespace Views
         /// <summary>
         /// Редактируемый аккаунт.
         /// </summary>
-        public Account EditingAccount
+        public AccountViewModel EditingAccount
         {
             get => _account;
             set
@@ -67,7 +75,7 @@ namespace Views
                 _account = value;
 
                 Login = _account.Login;
-                Password = _account.Password;
+                Password = _account.Password.Copy();
                 Website = _account.WebSite;
                 Comment = _account.Comment;
             }
@@ -96,15 +104,10 @@ namespace Views
         /// </summary>
         public SecureString Password
         {
-            [SecurityCritical] get => _password ?? (_password = new SecureString());
-            [SecurityCritical] set
+            get => _password;
+            set
             {
-                if (_password == null)
-                    _password = new SecureString();
-
-                _password.Clear();
-                foreach (var ch in value.ToUnsecure())
-                    _password.AppendChar(ch);
+                _password = value;
                 OnPropertyChanged(nameof(Password));
             }
         }
@@ -161,10 +164,10 @@ namespace Views
                 return;
 
             EditingAccount.Login = Login;
-            EditingAccount.Password = Password;
+            EditingAccount.Password = Password.Copy();
             EditingAccount.WebSite = Website;
             EditingAccount.Comment = Comment;
-
+            
             window.DialogResult = true;
         }
 

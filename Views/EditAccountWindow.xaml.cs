@@ -41,15 +41,6 @@ namespace Views
         }
 
         /// <summary>
-        /// Редактируемый аккаунт.
-        /// </summary>
-        public Account EditingAccount
-        {
-            get => _editAccountWindowViewModel.EditingAccount;
-            set => _editAccountWindowViewModel.EditingAccount = value;
-        }
-
-        /// <summary>
         /// Обработчик изменения пароля в PasswordBox.
         /// </summary>
         private void OnPasswordChanged(object sender, RoutedEventArgs e)

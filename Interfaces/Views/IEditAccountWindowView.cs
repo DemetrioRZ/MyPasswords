@@ -7,9 +7,6 @@ namespace Interfaces.Views
     /// </summary>
     public interface IEditAccountWindowView : IView
     {
-        /// <summary>
-        /// Редактируемый аккаунт.
-        /// </summary>
-        Account EditingAccount { get; set; }
+        
     }
 }
