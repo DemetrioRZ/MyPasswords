@@ -73,6 +73,9 @@ namespace Views
             }
         }
 
+        /// <summary>
+        /// Метод загрузки пароля в PasswordBox при первой загрузке.
+        /// </summary>
         public Action<SecureString> LoadPassword { get; set; } 
 
         /// <summary>
@@ -89,11 +92,11 @@ namespace Views
         }
 
         /// <summary>
-        /// Логин.
+        /// Пароль.
         /// </summary>
         public SecureString Password
         {
-            get => _password ?? (_password = new SecureString());
+            [SecurityCritical] get => _password ?? (_password = new SecureString());
             [SecurityCritical] set
             {
                 if (_password == null)
@@ -132,11 +135,18 @@ namespace Views
             }
         }
 
+        /// <summary>
+        /// Задаёт пароль для модели.
+        /// </summary>
+        /// <param name="password">новое значение пароля</param>
         public void SetPasswordSecure(SecureString password)
         {
             Password = password;
         }
 
+        /// <summary>
+        /// Вызывается при загрузке окна редактора, передаёт пароль в PasswordBox.
+        /// </summary>
         public void OnLoaded()
         {
             LoadPassword?.Invoke(Password.Copy());

@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Common\Command.cs" />
     <Compile Include="Common\ViewModelBase.cs" />
+    <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="EditAccountWindow.xaml.cs">
       <DependentUpon>EditAccountWindow.xaml</DependentUpon>
     </Compile>

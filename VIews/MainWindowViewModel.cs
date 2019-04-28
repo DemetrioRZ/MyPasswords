@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using Interfaces.Logic;
 using Interfaces.Views;
@@ -86,8 +87,20 @@ namespace Views
             {
                 _accounts = value;
                 OnPropertyChanged(nameof(Accounts));
+                OnPropertyChanged(nameof(CanShowGrid));
+                OnPropertyChanged(nameof(CanShowHintLabel));
             }
         }
+
+        /// <summary>
+        /// Проверка наличия открытого или созданного списка аккаунтов.
+        /// </summary>
+        public bool CanShowGrid => _accounts != null;
+
+        /// <summary>
+        /// Проверка показывать ли подсказку с чего начать работу.
+        /// </summary>
+        public bool CanShowHintLabel => _accounts == null;
 
         /// <summary>
         /// Выбранный аккаунт.
@@ -119,6 +132,9 @@ namespace Views
         /// </summary>
         private void NewFile(object param)
         {
+            if (Accounts != null && MessageBox.Show("Create new file?", "New file", MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
+                return;
+                
             Accounts = new ObservableCollection<Account>(new List<Account>());
         }
 
@@ -127,6 +143,9 @@ namespace Views
         /// </summary>
         private async void OpenFileAsync(object param)
         {
+            if (Accounts != null && MessageBox.Show("Open existing file?", "Open file", MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
+                return;
+
             var ofd = new OpenFileDialog {Multiselect = false, Filter = "All files (*.*)|*.*"};
             
             if (ofd.ShowDialog() != true)

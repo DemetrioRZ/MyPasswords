@@ -3,8 +3,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Views"
+        xmlns:converters="clr-namespace:Views.Converters"
         mc:Ignorable="d"
         Title="MyPasswords" Height="450" Width="800">
+
+    <Window.Resources>
+        <converters:VisibilityConverter x:Key="VisibilityConverter"></converters:VisibilityConverter>
+    </Window.Resources>
+
     <DockPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
             <!-- меню приложения -->
@@ -50,38 +57,50 @@
             <StackPanel Orientation="Horizontal">
                 <!-- основное меню с кнопками -->
                 <ToolBar Name="ButtonsToolBar">
-                    <Button Height="24" Width="24" ToolTip="Создать новый файл" Command="{Binding NewFileCommand}">
+                    <Button Height="24" Width="24" ToolTip="Create new file" Command="{Binding NewFileCommand}">
                         <Image Source="Images/new-file-24.png"></Image>
                     </Button>
-                    <Button Height="24" Width="24" ToolTip="Открыть файл" Command="{Binding OpenFileCommand}">
+                    <Button Height="24" Width="24" ToolTip="Open file" Command="{Binding OpenFileCommand}">
                         <Image Source="Images/open-file-24.png"></Image>
                     </Button>
-                    <Button Height="24" Width="24" ToolTip="Сохранить файл" Command="{Binding SaveFileCommand}">
+                    <Button Height="24" Width="24" ToolTip="Save file" Command="{Binding SaveFileCommand}">
                         <Image Source="Images/save-24.png"></Image>
                     </Button>
                 </ToolBar>
                 <ToolBar>
-                    <Button Height="24" Width="24" ToolTip="Создать новый аккаунт" Command="{Binding CreateAccountCommand}">
+                    <Button Height="24" Width="24" ToolTip="Create new account" Command="{Binding CreateAccountCommand}">
                         <Image Source="Images/add-24.png"></Image>
                     </Button>
-                    <Button Height="24" Width="24" ToolTip="Редактировать аккаунт" Command="{Binding EditAccountCommand}" CommandParameter="{Binding SelectedAccount}">
+                    <Button Height="24" Width="24" ToolTip="Edit account" Command="{Binding EditAccountCommand}" CommandParameter="{Binding SelectedAccount}">
                         <Image Source="Images/edit-24.png"></Image>
                     </Button>
                 </ToolBar>
             </StackPanel>
-
-            
         </StackPanel>
 
-        <!-- основной грид с паролями -->
-        <DataGrid Name="PasswordsGrid" DockPanel.Dock="Bottom" 
-                  ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedAccount}"
-                  IsReadOnly="True" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False" >
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Path=Login, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Header="Login" Width="140"></DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Path=WebSite, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Header="Web site" Width="150"></DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Path=Comment, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Header="Comment" Width="*"></DataGridTextColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+        <DockPanel DockPanel.Dock="Bottom" LastChildFill="True">
+            <!-- подсказка -->
+            <Label DockPanel.Dock="Bottom" Content="Create new or open an existing file with passwords." 
+                    Visibility="{Binding Path=CanShowHintLabel, Mode=OneWay, Converter={StaticResource VisibilityConverter}}"></Label>
+
+            <!-- основной грид с паролями -->
+            <DataGrid DockPanel.Dock="Top" Name="PasswordsGrid"
+                      ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedAccount}"
+                      IsReadOnly="True" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False" 
+                      Visibility="{Binding Path=CanShowGrid, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
+                <DataGrid.InputBindings>
+                    <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding EditAccountCommand}" CommandParameter="{Binding SelectedAccount}"></MouseBinding>
+                </DataGrid.InputBindings>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Path=Login, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Header="Login" Width="140"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Path=WebSite, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Header="Web site" Width="150"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Path=Comment, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Header="Comment" Width="*"></DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+
+        
+
+        
     </DockPanel>
 </Window>
