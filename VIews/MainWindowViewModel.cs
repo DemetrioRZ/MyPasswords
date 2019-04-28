@@ -156,10 +156,17 @@ namespace Views
             if (string.IsNullOrWhiteSpace(_serializedAccountsFilePath))
                 return;
 
-            var accounts = await _accountsLogic.GetAccounts(_serializedAccountsFilePath);
-            var accountViewModels = accounts.Select(x => new AccountViewModel().For(x)).ToList();
+            try
+            {
+                var accounts = await _accountsLogic.GetAccounts(_serializedAccountsFilePath);
+                var accountViewModels = accounts.Select(x => new AccountViewModel().For(x)).ToList();
 
-            Accounts = new ObservableCollection<AccountViewModel>(accountViewModels);
+                Accounts = new ObservableCollection<AccountViewModel>(accountViewModels);
+            }
+            catch (DecryptException)
+            {
+                MessageBox.Show("Decrypt file error, wrong password", "Decryption error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         /// <summary>
@@ -179,7 +186,14 @@ namespace Views
             if (string.IsNullOrWhiteSpace(_serializedAccountsFilePath))
                 return;
 
-            await _accountsLogic.SaveAccounts(Accounts.Select(x => x.GetModel()).ToList(), _serializedAccountsFilePath);
+            try
+            {
+                await _accountsLogic.SaveAccounts(Accounts.Select(x => x.GetModel()).ToList(), _serializedAccountsFilePath);
+            }
+            catch (EncryptException)
+            {
+                MessageBox.Show("Encrypt file error, please contact developer", "Encryption error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         /// <summary>

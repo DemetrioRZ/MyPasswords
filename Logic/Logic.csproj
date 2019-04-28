@@ -46,8 +46,6 @@
     <Compile Include="AccountsSerializer.cs" />
     <Compile Include="EncryptDecryptLogic.cs" />
     <Compile Include="ExceptionHelper.cs" />
-    <Compile Include="DecryptLogic.cs" />
-    <Compile Include="EncryptLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

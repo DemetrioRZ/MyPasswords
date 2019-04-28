@@ -43,6 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Account.cs" />
+    <Compile Include="DecryptException.cs" />
+    <Compile Include="EncryptException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ModelExtensions.cs" />
   </ItemGroup>

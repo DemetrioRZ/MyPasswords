@@ -81,8 +81,6 @@ namespace MyPasswords
         private void RegisterLogic(ContainerBuilder builder)
         {
             builder.RegisterType<ExceptionHelper>().As<IExceptionHelper>().InstancePerDependency();
-            builder.RegisterType<DecryptLogic>().As<IDecryptLogic>().InstancePerDependency();
-            builder.RegisterType<EncryptLogic>().As<IEncryptLogic>().InstancePerDependency();
             builder.RegisterType<EncryptDecryptLogic>().As<IEncryptDecryptLogic>().InstancePerDependency();
             builder.RegisterType<AccountsLogic>().As<IAccountsLogic>().InstancePerDependency();
             builder.RegisterType<AccountsSerializer>().As<IAccountsSerializer>().InstancePerDependency();
