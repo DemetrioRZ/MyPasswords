@@ -47,5 +47,23 @@ namespace Model
         /// </summary>
         [DataMember] 
         public string Comment { get; set; }
+
+        /// <summary>
+        /// Незащищённый пароль для сериализации.
+        /// </summary>
+        [DataMember]
+        private string UnsafePassword
+        {
+            [SecurityCritical] get => Password.ToUnsecure();
+            [SecurityCritical] set
+            {
+                if (Password == null)
+                    Password = new SecureString();
+
+                Password.Clear();
+                foreach (var ch in value)
+                    Password.AppendChar(ch);
+            }
+        }
     }
 }
