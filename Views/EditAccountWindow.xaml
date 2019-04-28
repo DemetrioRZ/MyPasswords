@@ -35,7 +35,22 @@
                 </Grid.ColumnDefinitions>
                 <PasswordBox Grid.Column="0" x:Name="PasswordBox" PasswordChanged="OnPasswordChanged" ></PasswordBox>
                 <TextBox Grid.Column="0" x:Name="UnsecuredPasswordBox" TextChanged="OnUnsecuredPasswordChanged" Visibility="Collapsed"></TextBox>
-                <ToggleButton Grid.Column="1" x:Name="ShowPasswordButton" Click="OnShowPasswordClick"></ToggleButton>
+                <ToggleButton Grid.Column="1" x:Name="ShowPasswordButton" Click="OnShowPasswordClick" Background="White" IsTabStop="False">
+                    <Image x:Name="ToggleImage" Stretch="Uniform">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=ShowPasswordButton, Path=IsChecked}" Value="True">
+                                        <Setter Property="Source" Value="Images/eye-16.png"></Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=ShowPasswordButton, Path=IsChecked}" Value="False">
+                                        <Setter Property="Source" Value="Images/eye-hidden-16.png"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                </ToggleButton>
             </Grid>
             <TextBox Grid.Column="1" Grid.Row="5" Margin="0,0,10,0" Text="{Binding Website, UpdateSourceTrigger=PropertyChanged}"></TextBox>
             <TextBox Grid.Column="1" Grid.Row="7" Height="60" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding Comment, UpdateSourceTrigger=PropertyChanged}"

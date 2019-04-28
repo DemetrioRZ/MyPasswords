@@ -94,5 +94,9 @@
     <Resource Include="Images\edit-24.png" />
     <Resource Include="Images\save-24.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\eye-16.png" />
+    <Resource Include="Images\eye-hidden-16.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
