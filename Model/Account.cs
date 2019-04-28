@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using System.Security;
 
 namespace Model
 {
     [DataContract]
     public class Account
     {
+        public Account()
+        {
+            Id = Guid.NewGuid();
+            Password = new SecureString();
+        }
+
         [DataMember]
         public Guid Id { get; set; }
 
@@ -13,7 +20,7 @@ namespace Model
         public string Login { get; set; }
 
         [DataMember]
-        public string Password { get; set; }
+        public SecureString Password { get; set; }
 
         [DataMember]
         public string WebSite { get; set; }

@@ -167,7 +167,7 @@ namespace Views
         /// </summary>
         private void CreateAccount(object param)
         {
-            var account = new Account { Id = Guid.NewGuid() };
+            var account = new Account();
             var editWindow = _getEditAccountWindowView();
 
             editWindow.EditingAccount = account;
@@ -186,8 +186,11 @@ namespace Views
             if (!(param is Account account))
                 return;
 
-            // todo: открыть в окне на редактирование
+            var editWindow = _getEditAccountWindowView();
 
+            editWindow.EditingAccount = account;
+
+            editWindow.ShowDialog();
         }
     }
 }

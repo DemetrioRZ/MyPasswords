@@ -1,4 +1,6 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Security;
+using System.Windows.Input;
 using Interfaces.Views;
 using Model;
 using Views.Common;
@@ -23,12 +25,7 @@ namespace Views
         /// <summary>
         /// Пароль.
         /// </summary>
-        private string _password;
-
-        /// <summary>
-        /// Повторно введенный пароль.
-        /// </summary>
-        private string _repeatPassword;
+        private SecureString _password;
 
         /// <summary>
         /// Сайт ресурса.
@@ -76,6 +73,8 @@ namespace Views
             }
         }
 
+        public Action<SecureString> LoadPassword { get; set; } 
+
         /// <summary>
         /// Логин.
         /// </summary>
@@ -92,26 +91,18 @@ namespace Views
         /// <summary>
         /// Логин.
         /// </summary>
-        public string Password
+        public SecureString Password
         {
-            get => _password;
-            set
+            get => _password ?? (_password = new SecureString());
+            [SecurityCritical] set
             {
-                _password = value;
-                OnPropertyChanged(nameof(Password));
-            }
-        }
+                if (_password == null)
+                    _password = new SecureString();
 
-        /// <summary>
-        /// Повторно введённый пароль.
-        /// </summary>
-        public string RepeatPassword
-        {
-            get => _repeatPassword;
-            set
-            {
-                _repeatPassword = value;
-                OnPropertyChanged(nameof(RepeatPassword));
+                _password.Clear();
+                foreach (var ch in value.ToUnsecure())
+                    _password.AppendChar(ch);
+                OnPropertyChanged(nameof(Password));
             }
         }
 
@@ -141,6 +132,16 @@ namespace Views
             }
         }
 
+        public void SetPasswordSecure(SecureString password)
+        {
+            Password = password;
+        }
+
+        public void OnLoaded()
+        {
+            LoadPassword?.Invoke(Password.Copy());
+        }
+
         /// <summary>
         /// Подтверждение.
         /// </summary>
@@ -162,11 +163,9 @@ namespace Views
         /// </summary>
         private bool CanOk(object param)
         {
-            return !string.IsNullOrWhiteSpace(Password)
-                   && !string.IsNullOrWhiteSpace(RepeatPassword)
+            return Password.Length > 0
                    && !string.IsNullOrWhiteSpace(Login)
-                   && !string.IsNullOrWhiteSpace(Website)
-                   && Password == RepeatPassword;
+                   && !string.IsNullOrWhiteSpace(Website);
         }
 
         /// <summary>
