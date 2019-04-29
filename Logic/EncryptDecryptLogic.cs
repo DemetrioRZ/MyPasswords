@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,33 +12,32 @@ namespace Logic
 {
     public class EncryptDecryptLogic : IEncryptDecryptLogic
     {
-        public async Task<string> DecryptAsync(string filePath)
+        public async Task<string> DecryptAsync(string encryptedJson, SecureString masterPassword)
         {
             return await Task.Run(() =>
             {
-                var fileText = File.ReadAllText(filePath);
-
-                var decryptedText = Decrypt("testkey", fileText);
+                var decryptedText = Decrypt(masterPassword, encryptedJson);
 
                 return decryptedText;
             });
         }
 
-        public async Task EncryptAsync(string filePath, string json)
+        public async Task<string> EncryptAsync(string json, SecureString key)
         {
-            await Task.Run(() =>
+            return await Task.Run(() =>
             {
-                var encryptedText = Encrypt("testkey", json);
+                var encryptedText = Encrypt(key, json);
 
-                File.WriteAllText(filePath, encryptedText);
+                return encryptedText;
             });
         }
 
-        public string Encrypt( string key, string data )
+        [SecurityCritical]
+        private string Encrypt(SecureString masterPassword, string data)
         {
             try
             {
-                var keys = GetHashKeys(key);
+                var keys = GetHashKeys(masterPassword.ToUnsecure());
 
                 var encData = EncryptStringToBytes_Aes(data, keys[0], keys[1]);
             
@@ -45,17 +45,18 @@ namespace Logic
             }
             catch (CryptographicException ex)
             {
-                // todo: добавить логирование
+                // todo: добавить логирование исходного исключения
                 throw new EncryptException("Encrypt error", ex);
             }
             
         }
 
-        public string Decrypt(string key, string data)
+        [SecurityCritical]
+        private string Decrypt(SecureString masterPassword, string data)
         {
             try
             {
-                var keys = GetHashKeys(key);
+                var keys = GetHashKeys(masterPassword.ToUnsecure());
             
                 var decData = DecryptStringFromBytes_Aes( data, keys[0], keys[1] );
             
@@ -63,7 +64,7 @@ namespace Logic
             }
             catch (Exception ex)
             {
-                // todo: добавить логирование
+                // todo: добавить логирование исходного исключения
                 throw new DecryptException("Decrypt error", ex);
             }
         }

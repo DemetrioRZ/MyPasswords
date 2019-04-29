@@ -84,6 +84,7 @@ namespace MyPasswords
             builder.RegisterType<EncryptDecryptLogic>().As<IEncryptDecryptLogic>().InstancePerDependency();
             builder.RegisterType<AccountsLogic>().As<IAccountsLogic>().InstancePerDependency();
             builder.RegisterType<AccountsSerializer>().As<IAccountsSerializer>().InstancePerDependency();
+            builder.RegisterType<GzipArchiver>().As<IGzipArchiver>().InstancePerDependency();
         }
 
     }

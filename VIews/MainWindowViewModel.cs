@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Security;
 using System.Windows;
 using System.Windows.Input;
 using Interfaces.Logic;
@@ -116,6 +117,20 @@ namespace Views
         }
 
         /// <summary>
+        /// TODO: для тестирования, удалить.
+        /// </summary>
+        private SecureString FakePassword
+        {
+            get
+            {
+                var fakePassword = new SecureString();
+                foreach (var ch in "testkey")
+                    fakePassword.AppendChar(ch);
+                return fakePassword;
+            }
+        }
+
+        /// <summary>
         /// Инициализация команд.
         /// </summary>
         private void InitializeCommands()
@@ -158,7 +173,7 @@ namespace Views
 
             try
             {
-                var accounts = await _accountsLogic.GetAccounts(_serializedAccountsFilePath);
+                var accounts = await _accountsLogic.GetAccounts(_serializedAccountsFilePath, FakePassword);
                 var accountViewModels = accounts.Select(x => new AccountViewModel().For(x)).ToList();
 
                 Accounts = new ObservableCollection<AccountViewModel>(accountViewModels);
@@ -174,7 +189,7 @@ namespace Views
         /// </summary>
         private async void SaveFileAsync(object param)
         {
-            var sfd = new SaveFileDialog { Filter = "All files (*.*)|*.*" };
+            var sfd = new SaveFileDialog { Filter = "Gzip files (*.gz)|*.gz" };
             if (!string.IsNullOrWhiteSpace(_serializedAccountsFilePath))
                 sfd.FileName = _serializedAccountsFilePath;
 
@@ -188,7 +203,8 @@ namespace Views
 
             try
             {
-                await _accountsLogic.SaveAccounts(Accounts.Select(x => x.GetModel()).ToList(), _serializedAccountsFilePath);
+                var accounts = Accounts.Select(x => x.GetModel()).ToList();
+                await _accountsLogic.SaveAccounts(accounts, _serializedAccountsFilePath, FakePassword);
             }
             catch (EncryptException)
             {
