@@ -1,8 +1,6 @@
 ﻿using System.Security;
 using System.Windows;
-using System.Windows.Controls;
 using Interfaces.Views;
-using Model;
 
 namespace Views
 {
@@ -31,32 +29,6 @@ namespace Views
         }
 
         /// <summary>
-        /// Загружает пароль из модели в PasswordBox
-        /// </summary>
-        /// <param name="securePassword">пароль из модели SecureString</param>
-        [SecurityCritical]
-        private void LoadPassword(SecureString securePassword)
-        {
-            PasswordBox.Password = securePassword.ToUnsecure();
-        }
-
-        /// <summary>
-        /// Обработчик изменения пароля в PasswordBox.
-        /// </summary>
-        private void OnPasswordChanged(object sender, RoutedEventArgs e)
-        {
-            _editAccountWindowViewModel.SetPasswordSecure(PasswordBox.SecurePassword);
-        }
-
-        /// <summary>
-        /// Обработчик изменения пароля в UnsecuredPasswordBox.
-        /// </summary>
-        private void OnUnsecuredPasswordChanged(object sender, TextChangedEventArgs e)
-        {
-            PasswordBox.Password = UnsecuredPasswordBox.Text;
-        }
-
-        /// <summary>
         /// Обработчик события загрузки окна.
         /// Можно при помощи System.Windows.Interactivity привязать команду, но пока решил не добавлять ради этого зависимость.
         /// </summary>
@@ -66,33 +38,22 @@ namespace Views
         }
 
         /// <summary>
-        /// Обработчик нажатия кнопки отображения/скрытия пароля.
+        /// Загружает пароль из модели в PasswordControl
         /// </summary>
-        private void OnShowPasswordClick(object sender, RoutedEventArgs e)
+        /// <param name="securePassword">пароль из модели SecureString</param>
+        [SecurityCritical]
+        private void LoadPassword(SecureString securePassword)
         {
-            if (ShowPasswordButton.IsChecked == true)
-            {
-                ForceUnsecurePasswordTextBox(PasswordBox.Password);
-                PasswordBox.Visibility = Visibility.Collapsed;
-                UnsecuredPasswordBox.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                ForceUnsecurePasswordTextBox(string.Empty);
-                UnsecuredPasswordBox.Visibility = Visibility.Collapsed;
-                PasswordBox.Visibility = Visibility.Visible;
-            }
+            PasswordControl.SecurePassword = securePassword;
         }
 
         /// <summary>
-        /// Меняет значение UnsecuredPasswordBox и не генерирует событие TextChanged. 
+        /// Обработчик изменения пароля.
         /// </summary>
-        /// <param name="forceValue">устанавливаемое значение</param>
-        private void ForceUnsecurePasswordTextBox(string forceValue)
+        [SecurityCritical]
+        private void OnPasswordChanged(object sender, RoutedEventArgs e)
         {
-            UnsecuredPasswordBox.TextChanged -= OnUnsecuredPasswordChanged;
-            UnsecuredPasswordBox.Text = forceValue;
-            UnsecuredPasswordBox.TextChanged += OnUnsecuredPasswordChanged;
+            _editAccountWindowViewModel.SetPasswordSecure(PasswordControl.SecurePassword);
         }
     }
 }

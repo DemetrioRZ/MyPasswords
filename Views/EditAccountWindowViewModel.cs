@@ -144,7 +144,7 @@ namespace Views
         /// <param name="password">новое значение пароля</param>
         public void SetPasswordSecure(SecureString password)
         {
-            Password = password;
+            Password = password.Copy();
         }
 
         /// <summary>
