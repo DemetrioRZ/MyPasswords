@@ -30,8 +30,8 @@ namespace Views
                 if (tokens.Length != 5)
                     return;
 
-                window.Top = double.Parse(tokens[0]);
-                window.Left = double.Parse(tokens[1]);
+                window.Top = IsOnScreenVertical(double.Parse(tokens[0]));
+                window.Left = IsOnScreenHorizontal(double.Parse(tokens[1]));
                 window.Height = double.Parse(tokens[2]);
                 window.Width = double.Parse(tokens[3]);
 
@@ -101,6 +101,30 @@ namespace Views
                 // При перезапуске настройки будут сброшены, т к файл настроек повреждён
                 MessageBox.Show("Failed to save window position in user settings", "User settings", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
+        }
+
+        /// <summary>
+        /// Проверка что точка попадает в рабочее пространство по вертикали.
+        /// </summary>
+        /// <param name="value">значение координаты</param>
+        /// <returns>тоже самое значение, если попадаем в диапазон, или 0 если не попадаем</returns>
+        private double IsOnScreenVertical(double value)
+        {
+            if (SystemParameters.VirtualScreenTop <= value && value <= SystemParameters.VirtualScreenTop + SystemParameters.VirtualScreenHeight)
+                return value;
+            return 0;
+        }
+
+        /// <summary>
+        /// Проверка что точка попадает в рабочее пространство по горизонтали.
+        /// </summary>
+        /// <param name="value">значение координаты</param>
+        /// <returns>тоже самое значение, если попадаем в диапазон, или 0 если не попадаем</returns>
+        private double IsOnScreenHorizontal(double value)
+        {
+            if (SystemParameters.VirtualScreenLeft <= value && value <= SystemParameters.VirtualScreenLeft + SystemParameters.VirtualScreenWidth)
+                return value;
+            return 0;
         }
     }
 }
