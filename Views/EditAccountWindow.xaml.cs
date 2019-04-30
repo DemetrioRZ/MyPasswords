@@ -1,4 +1,5 @@
-﻿using System.Security;
+﻿using System.ComponentModel;
+using System.Security;
 using System.Windows;
 using Interfaces.Views;
 
@@ -15,17 +16,27 @@ namespace Views
         private readonly EditAccountWindowViewModel _editAccountWindowViewModel;
 
         /// <summary>
+        /// Класс для безопасного восстановления и сохранения размеров окон в файле конфигурации приложения.
+        /// </summary>
+        private readonly WindowSizeRestorer _windowSizeRestorer;
+
+        /// <summary>
         /// Конструктор.
         /// </summary>
         /// <param name="editAccountWindowViewModel">модель представления вида окна редактора аккаунта</param>
-        public EditAccountWindow(EditAccountWindowViewModel editAccountWindowViewModel)
+        /// <param name="windowSizeRestorer"></param>
+        public EditAccountWindow(
+            EditAccountWindowViewModel editAccountWindowViewModel,
+            WindowSizeRestorer windowSizeRestorer)
         {
             InitializeComponent();
 
             _editAccountWindowViewModel = editAccountWindowViewModel;
             _editAccountWindowViewModel.LoadPassword = LoadPassword;
-
             this.DataContext = _editAccountWindowViewModel;
+
+            _windowSizeRestorer = windowSizeRestorer;
+            _windowSizeRestorer.TryRestore(this);
         }
 
         /// <summary>
@@ -35,6 +46,14 @@ namespace Views
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             _editAccountWindowViewModel.OnLoaded();
+        }
+
+        /// <summary>
+        /// Обработчик закрытия окна.
+        /// </summary>
+        private void OnClosing(object sender, CancelEventArgs e)
+        {
+            _windowSizeRestorer.TryStore(this);
         }
 
         /// <summary>

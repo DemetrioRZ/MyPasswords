@@ -62,6 +62,7 @@ namespace MyPasswords
         {
             builder.RegisterType<MainWindow>().As<IMainWindowView>().InstancePerDependency();
             builder.RegisterType<EditAccountWindow>().As<IEditAccountWindowView>().InstancePerDependency();
+            builder.RegisterType<WindowSizeRestorer>().SingleInstance();
         }
 
         /// <summary>
