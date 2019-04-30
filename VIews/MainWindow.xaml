@@ -44,6 +44,11 @@
                             <Image Source="Images/edit-24.png"></Image>
                         </MenuItem.Icon>
                     </MenuItem>
+                    <MenuItem Header="Delete Account" Command="{Binding DeleteAccountCommand}"  CommandParameter="{Binding SelectedAccount}">
+                        <MenuItem.Icon>
+                            <Image Source="Images/cross-24.png"></Image>
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
                 <MenuItem Header="Version">
                     <MenuItem Header="Information">
@@ -73,6 +78,9 @@
                     </Button>
                     <Button Height="24" Width="24" ToolTip="Edit account" Command="{Binding EditAccountCommand}" CommandParameter="{Binding SelectedAccount}">
                         <Image Source="Images/edit-24.png"></Image>
+                    </Button>
+                    <Button Height="24" Width="24" ToolTip="Delete account" Command="{Binding DeleteAccountCommand}" CommandParameter="{Binding SelectedAccount}">
+                        <Image Source="Images/cross-24.png"></Image>
                     </Button>
                 </ToolBar>
             </StackPanel>

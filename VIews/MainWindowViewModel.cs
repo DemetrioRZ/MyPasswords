@@ -79,6 +79,11 @@ namespace Views
         public ICommand EditAccountCommand { get; private set; }
 
         /// <summary>
+        /// Команда удаления выбранного аккаунта.
+        /// </summary>
+        public ICommand DeleteAccountCommand { get; private set; }
+
+        /// <summary>
         /// Коллекция отображаемых аккаунтов
         /// </summary>
         public ObservableCollection<AccountViewModel> Accounts
@@ -140,6 +145,7 @@ namespace Views
             SaveFileCommand = new Command(SaveFileAsync, x => Accounts != null);
             CreateAccountCommand = new Command(CreateAccount, x => Accounts != null);
             EditAccountCommand = new Command(EditAccount, x => Accounts != null && Accounts.Any() && SelectedAccount != null);
+            DeleteAccountCommand = new Command(DeleteAccount, x => Accounts != null && Accounts.Any() && SelectedAccount != null);
         }
 
         /// <summary>
@@ -233,6 +239,7 @@ namespace Views
         /// <summary>
         /// Редактирует выбранный аккаунт.
         /// </summary>
+        /// <param name="param">модель представления вида выбранного аккаунта</param>
         private void EditAccount(object param)
         {
             if (!(param is AccountViewModel account))
@@ -245,6 +252,22 @@ namespace Views
             editWindowViewModel.EditingAccount = account;
 
             editWindow.ShowDialog();
+        }
+
+        /// <summary>
+        /// Удаляет выбранный аккаунт.
+        /// </summary>
+        /// <param name="param">модель представления вида выбранного аккаунта</param>
+        private void DeleteAccount(object param)
+        {
+            if (!(param is AccountViewModel account))
+                return;
+
+            if (MessageBox.Show($"Are you sure you want to delete account {account.Login}?", "Delete account", MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
+                return;
+
+            Accounts.Remove(account);
+            account.Password.Dispose();
         }
     }
 }
