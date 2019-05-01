@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using System.Windows;
 
-namespace Views
+namespace Views.Common
 {
     /// <summary>
     /// Класс для безопасного восстановления и сохранения размеров окон в файле конфигурации приложения.

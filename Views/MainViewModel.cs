@@ -13,7 +13,7 @@ using Views.Common;
 
 namespace Views
 {
-    public class MainWindowViewModel : ViewModelBase
+    public class MainViewModel : ViewModelBase
     {
         /// <summary>
         /// Логика работы с аккаунтами
@@ -23,12 +23,12 @@ namespace Views
         /// <summary>
         /// Функтор получения окна редактора аккаунта
         /// </summary>
-        private readonly Func<IEditAccountWindowView> _getEditAccountWindowView;
+        private readonly Func<IEditAccountView> _getEditAccountWindowView;
 
         /// <summary>
         /// Функтор получения окна ввода мастер пароля.
         /// </summary>
-        private readonly Func<IEnterMasterPasswordWindowView> _getEnterMasterPasswordWindowView;
+        private readonly Func<IEnterMasterPasswordView> _getEnterMasterPasswordWindowView;
 
         /// <summary>
         /// Путь к сериализованному файлу с аккаунтами.
@@ -57,10 +57,10 @@ namespace Views
         /// <param name="accountsLogic">Логика работы с аккаунтами</param>
         /// <param name="getEditAccountWindowView">Функтор получения окна редактора аккаунта</param>
         /// <param name="getEnterMasterPasswordWindowView">Функтор получения окна ввода мастер пароля</param>
-        public MainWindowViewModel(
+        public MainViewModel(
             IAccountsLogic accountsLogic, 
-            Func<IEditAccountWindowView> getEditAccountWindowView, 
-            Func<IEnterMasterPasswordWindowView> getEnterMasterPasswordWindowView)
+            Func<IEditAccountView> getEditAccountWindowView, 
+            Func<IEnterMasterPasswordView> getEnterMasterPasswordWindowView)
         {
             _accountsLogic = accountsLogic;
             _getEditAccountWindowView = getEditAccountWindowView;
@@ -190,7 +190,7 @@ namespace Views
                 return;
             }
 
-            if (!(enterMasterPasswordView.DataContext is EnterMasterPasswordWindowViewModel enterMasterPasswordViewModel))
+            if (!(enterMasterPasswordView.DataContext is EnterMasterPasswordViewModel enterMasterPasswordViewModel))
             {
                 _serializedAccountsFilePath = null;
                 return;
@@ -239,7 +239,7 @@ namespace Views
                     return;
                 }
 
-                if (!(enterMasterPasswordView.DataContext is EnterMasterPasswordWindowViewModel enterMasterPasswordViewModel))
+                if (!(enterMasterPasswordView.DataContext is EnterMasterPasswordViewModel enterMasterPasswordViewModel))
                 {
                     _serializedAccountsFilePath = null;
                     return;
@@ -266,7 +266,7 @@ namespace Views
         {
             var account = new AccountViewModel().For(new Account());
             var editWindow = _getEditAccountWindowView();
-            if (!(editWindow.DataContext is EditAccountWindowViewModel editWindowViewModel))
+            if (!(editWindow.DataContext is EditAccountViewModel editWindowViewModel))
                 return;
 
             editWindowViewModel.EditingAccount = account;
@@ -287,7 +287,7 @@ namespace Views
                 return;
 
             var editWindow = _getEditAccountWindowView();
-            if (!(editWindow.DataContext is EditAccountWindowViewModel editWindowViewModel))
+            if (!(editWindow.DataContext is EditAccountViewModel editWindowViewModel))
                 return;
 
             editWindowViewModel.EditingAccount = account;

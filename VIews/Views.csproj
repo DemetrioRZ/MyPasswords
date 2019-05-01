@@ -56,15 +56,15 @@
     <Compile Include="EditAccountWindow.xaml.cs">
       <DependentUpon>EditAccountWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="EditAccountWindowViewModel.cs" />
+    <Compile Include="EditAccountViewModel.cs" />
     <Compile Include="EnterMasterPasswordWindow.xaml.cs">
       <DependentUpon>EnterMasterPasswordWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="EnterMasterPasswordWindowViewModel.cs" />
+    <Compile Include="EnterMasterPasswordViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainWindowViewModel.cs" />
+    <Compile Include="MainViewModel.cs" />
     <Compile Include="PasswordControl.xaml.cs">
       <DependentUpon>PasswordControl.xaml</DependentUpon>
     </Compile>
@@ -74,7 +74,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="WindowSizeRestorer.cs" />
+    <Compile Include="Common\WindowSizeRestorer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="EditAccountWindow.xaml">

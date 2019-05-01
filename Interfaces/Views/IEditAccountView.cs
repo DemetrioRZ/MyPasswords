@@ -3,7 +3,7 @@
     /// <summary>
     /// Интерфейс редактора аккаунта.
     /// </summary>
-    public interface IEditAccountWindowView : IView
+    public interface IEditAccountView : IView
     {
         
     }

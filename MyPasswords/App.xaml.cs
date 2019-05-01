@@ -5,6 +5,7 @@ using Interfaces.Logic;
 using Interfaces.Views;
 using Logic;
 using Views;
+using Views.Common;
 
 namespace MyPasswords
 {
@@ -25,7 +26,7 @@ namespace MyPasswords
         {
             SetupIoC();
 
-            var mainWindow = _container.Resolve<IMainWindowView>();
+            var mainWindow = _container.Resolve<IMainView>();
             mainWindow.Show();
         }
 
@@ -60,9 +61,9 @@ namespace MyPasswords
         /// <param name="builder">ContainerBuilder Autofac</param>
         private void RegisterViews(ContainerBuilder builder)
         {
-            builder.RegisterType<MainWindow>().As<IMainWindowView>().InstancePerDependency();
-            builder.RegisterType<EditAccountWindow>().As<IEditAccountWindowView>().InstancePerDependency();
-            builder.RegisterType<EnterMasterPasswordWindow>().As<IEnterMasterPasswordWindowView>().InstancePerDependency();
+            builder.RegisterType<MainWindow>().As<IMainView>().InstancePerDependency();
+            builder.RegisterType<EditAccountWindow>().As<IEditAccountView>().InstancePerDependency();
+            builder.RegisterType<EnterMasterPasswordWindow>().As<IEnterMasterPasswordView>().InstancePerDependency();
             builder.RegisterType<WindowSizeRestorer>().SingleInstance();
         }
 
@@ -72,9 +73,9 @@ namespace MyPasswords
         /// <param name="builder">ContainerBuilder Autofac</param>
         private void RegisterViewModels(ContainerBuilder builder)
         {
-            builder.RegisterType<MainWindowViewModel>().InstancePerDependency();
-            builder.RegisterType<EditAccountWindowViewModel>().InstancePerDependency();
-            builder.RegisterType<EnterMasterPasswordWindowViewModel>().InstancePerDependency();
+            builder.RegisterType<MainViewModel>().InstancePerDependency();
+            builder.RegisterType<EditAccountViewModel>().InstancePerDependency();
+            builder.RegisterType<EnterMasterPasswordViewModel>().InstancePerDependency();
         }
 
         /// <summary>

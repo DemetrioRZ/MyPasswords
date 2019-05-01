@@ -1,13 +1,14 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 using Interfaces.Views;
+using Views.Common;
 
 namespace Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, IMainWindowView
+    public partial class MainWindow : Window, IMainView
     {
         /// <summary>
         /// Класс для безопасного восстановления и сохранения размеров окон в файле конфигурации приложения.
@@ -17,15 +18,15 @@ namespace Views
         /// <summary>
         /// Конструктор.
         /// </summary>
-        /// <param name="mainWindowViewModel">Модель представления вида основного окна</param>
+        /// <param name="mainViewModel">Модель представления вида основного окна</param>
         /// <param name="windowSizeRestorer">Класс для безопасного восстановления и сохранения размеров окон в файле конфигурации приложения.</param>
         public MainWindow(
-            MainWindowViewModel mainWindowViewModel, 
+            MainViewModel mainViewModel, 
             WindowSizeRestorer windowSizeRestorer)
         {
             InitializeComponent();
             
-            DataContext = mainWindowViewModel;
+            DataContext = mainViewModel;
             _windowSizeRestorer = windowSizeRestorer;
 
             _windowSizeRestorer.TryRestore(this);

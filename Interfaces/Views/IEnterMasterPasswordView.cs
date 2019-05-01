@@ -3,7 +3,7 @@
     /// <summary>
     /// Интерфейс окна ввода мастер пароля.
     /// </summary>
-    public interface IEnterMasterPasswordWindowView : IView
+    public interface IEnterMasterPasswordView : IView
     {
         
     }

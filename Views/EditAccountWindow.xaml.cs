@@ -2,18 +2,19 @@
 using System.Security;
 using System.Windows;
 using Interfaces.Views;
+using Views.Common;
 
 namespace Views
 {
     /// <summary>
     /// Interaction logic for EditAccountWindow.xaml
     /// </summary>
-    public partial class EditAccountWindow : Window, IEditAccountWindowView
+    public partial class EditAccountWindow : Window, IEditAccountView
     {
         /// <summary>
         /// Модель представления вида окна.
         /// </summary>
-        private readonly EditAccountWindowViewModel _editAccountWindowViewModel;
+        private readonly EditAccountViewModel _editAccountViewModel;
 
         /// <summary>
         /// Класс для безопасного восстановления и сохранения размеров окон в файле конфигурации приложения.
@@ -23,17 +24,17 @@ namespace Views
         /// <summary>
         /// Конструктор.
         /// </summary>
-        /// <param name="editAccountWindowViewModel">модель представления вида окна редактора аккаунта</param>
+        /// <param name="editAccountViewModel">модель представления вида окна редактора аккаунта</param>
         /// <param name="windowSizeRestorer"></param>
         public EditAccountWindow(
-            EditAccountWindowViewModel editAccountWindowViewModel,
+            EditAccountViewModel editAccountViewModel,
             WindowSizeRestorer windowSizeRestorer)
         {
             InitializeComponent();
 
-            _editAccountWindowViewModel = editAccountWindowViewModel;
-            _editAccountWindowViewModel.LoadPassword = LoadPassword;
-            this.DataContext = _editAccountWindowViewModel;
+            _editAccountViewModel = editAccountViewModel;
+            _editAccountViewModel.LoadPassword = LoadPassword;
+            this.DataContext = _editAccountViewModel;
 
             _windowSizeRestorer = windowSizeRestorer;
             _windowSizeRestorer.TryRestore(this);
@@ -45,7 +46,8 @@ namespace Views
         /// </summary>
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            _editAccountWindowViewModel.OnLoaded();
+            _editAccountViewModel.OnLoaded();
+            LoginTextBox.Focus();
         }
 
         /// <summary>
@@ -72,7 +74,7 @@ namespace Views
         [SecurityCritical]
         private void OnPasswordChanged(object sender, RoutedEventArgs e)
         {
-            _editAccountWindowViewModel.SetPasswordSecure(PasswordControl.SecurePassword);
+            _editAccountViewModel.SetPasswordSecure(PasswordControl.SecurePassword);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Views
     /// <summary>
     /// Модель представления вида окна ввода мастер пароля.
     /// </summary>
-    public class EnterMasterPasswordWindowViewModel : ViewModelBase
+    public class EnterMasterPasswordViewModel : ViewModelBase
     {
         /// <summary>
         /// Мастер пароль.
@@ -18,7 +18,7 @@ namespace Views
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public EnterMasterPasswordWindowViewModel()
+        public EnterMasterPasswordViewModel()
         {
             InitializeCommands();
         }

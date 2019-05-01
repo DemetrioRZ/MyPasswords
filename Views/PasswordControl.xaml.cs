@@ -90,5 +90,16 @@ namespace Views
             UnsecuredPasswordBox.Text = forceValue;
             UnsecuredPasswordBox.TextChanged += OnUnsecuredPasswordChanged;
         }
+
+        /// <summary>
+        /// Переводит фокус в активное поле ввода.
+        /// </summary>
+        public new void Focus()
+        {
+            if (ShowPasswordButton.IsChecked == true)
+                UnsecuredPasswordBox.Focus();
+            else
+                PasswordBox.Focus();
+        }
     }
 }

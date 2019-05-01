@@ -2,7 +2,6 @@
 using System.Security;
 using System.Windows.Input;
 using Interfaces.Views;
-using Model;
 using Views.Common;
 
 namespace Views
@@ -10,7 +9,7 @@ namespace Views
     /// <summary>
     /// Модель представления вида окна редактирования аккаунта.
     /// </summary>
-    public class EditAccountWindowViewModel : ViewModelBase
+    public class EditAccountViewModel : ViewModelBase
     {
         /// <summary>
         /// Редактируемый аккаунт.
@@ -40,7 +39,7 @@ namespace Views
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public EditAccountWindowViewModel()
+        public EditAccountViewModel()
         {
             InitializeCommands();
         }
