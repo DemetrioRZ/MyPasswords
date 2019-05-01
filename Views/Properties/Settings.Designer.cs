@@ -46,5 +46,17 @@ namespace Views.Properties {
                 this["EditAccountWindowSize"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EnterMasterPasswordWindowSize {
+            get {
+                return ((string)(this["EnterMasterPasswordWindowSize"]));
+            }
+            set {
+                this["EnterMasterPasswordWindowSize"] = value;
+            }
+        }
     }
 }

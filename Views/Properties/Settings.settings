@@ -8,5 +8,8 @@
     <Setting Name="EditAccountWindowSize" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="EnterMasterPasswordWindowSize" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

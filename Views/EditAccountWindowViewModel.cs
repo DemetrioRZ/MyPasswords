@@ -104,8 +104,8 @@ namespace Views
         /// </summary>
         public SecureString Password
         {
-            get => _password;
-            set
+            [SecurityCritical] get => _password;
+            [SecurityCritical] set
             {
                 _password = value;
                 OnPropertyChanged(nameof(Password));

@@ -26,9 +26,20 @@ namespace Views
         private readonly Func<IEditAccountWindowView> _getEditAccountWindowView;
 
         /// <summary>
+        /// Функтор получения окна ввода мастер пароля.
+        /// </summary>
+        private readonly Func<IEnterMasterPasswordWindowView> _getEnterMasterPasswordWindowView;
+
+        /// <summary>
         /// Путь к сериализованному файлу с аккаунтами.
         /// </summary>
         private string _serializedAccountsFilePath;
+
+        /// <summary>
+        /// Мастер пароль.
+        /// </summary>
+        [SecurityCritical]
+        private SecureString _masterPassword;
 
         /// <summary>
         /// Коллекция отображаемых аккаунтов
@@ -45,10 +56,15 @@ namespace Views
         /// </summary>
         /// <param name="accountsLogic">Логика работы с аккаунтами</param>
         /// <param name="getEditAccountWindowView">Функтор получения окна редактора аккаунта</param>
-        public MainWindowViewModel(IAccountsLogic accountsLogic, Func<IEditAccountWindowView> getEditAccountWindowView)
+        /// <param name="getEnterMasterPasswordWindowView">Функтор получения окна ввода мастер пароля</param>
+        public MainWindowViewModel(
+            IAccountsLogic accountsLogic, 
+            Func<IEditAccountWindowView> getEditAccountWindowView, 
+            Func<IEnterMasterPasswordWindowView> getEnterMasterPasswordWindowView)
         {
             _accountsLogic = accountsLogic;
             _getEditAccountWindowView = getEditAccountWindowView;
+            _getEnterMasterPasswordWindowView = getEnterMasterPasswordWindowView;
 
             InitializeCommands();
         }
@@ -122,20 +138,6 @@ namespace Views
         }
 
         /// <summary>
-        /// TODO: для тестирования, удалить.
-        /// </summary>
-        private SecureString FakePassword
-        {
-            get
-            {
-                var fakePassword = new SecureString();
-                foreach (var ch in "testkey")
-                    fakePassword.AppendChar(ch);
-                return fakePassword;
-            }
-        }
-
-        /// <summary>
         /// Инициализация команд.
         /// </summary>
         private void InitializeCommands()
@@ -155,7 +157,10 @@ namespace Views
         {
             if (Accounts != null && MessageBox.Show("Create new file?", "New file", MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
                 return;
-                
+
+            _serializedAccountsFilePath = null;
+            _masterPassword = null;
+
             Accounts = new ObservableCollection<AccountViewModel>(new List<AccountViewModel>());
         }
 
@@ -177,9 +182,25 @@ namespace Views
             if (string.IsNullOrWhiteSpace(_serializedAccountsFilePath))
                 return;
 
+            var enterMasterPasswordView = _getEnterMasterPasswordWindowView();
+
+            if (enterMasterPasswordView.ShowDialog() != true)
+            {
+                _serializedAccountsFilePath = null;
+                return;
+            }
+
+            if (!(enterMasterPasswordView.DataContext is EnterMasterPasswordWindowViewModel enterMasterPasswordViewModel))
+            {
+                _serializedAccountsFilePath = null;
+                return;
+            }
+
+            _masterPassword = enterMasterPasswordViewModel.MasterPassword.Copy();
+
             try
             {
-                var accounts = await _accountsLogic.GetAccounts(_serializedAccountsFilePath, FakePassword);
+                var accounts = await _accountsLogic.GetAccounts(_serializedAccountsFilePath, _masterPassword.Copy());
                 var accountViewModels = accounts.Select(x => new AccountViewModel().For(x)).ToList();
 
                 Accounts = new ObservableCollection<AccountViewModel>(accountViewModels);
@@ -195,22 +216,42 @@ namespace Views
         /// </summary>
         private async void SaveFileAsync(object param)
         {
-            var sfd = new SaveFileDialog { Filter = "Gzip files (*.gz)|*.gz" };
-            if (!string.IsNullOrWhiteSpace(_serializedAccountsFilePath))
-                sfd.FileName = _serializedAccountsFilePath;
-
-            if (sfd.ShowDialog() != true)
-                return;
-
-            _serializedAccountsFilePath = sfd.FileName;
-
             if (string.IsNullOrWhiteSpace(_serializedAccountsFilePath))
-                return;
+            {
+                var sfd = new SaveFileDialog { Filter = "Gzip files (*.gz)|*.gz" };
+                
+                if (sfd.ShowDialog() != true)
+                    return;
+
+                _serializedAccountsFilePath = sfd.FileName;
+
+                if (string.IsNullOrWhiteSpace(_serializedAccountsFilePath))
+                    return;
+            }
+            
+            if (_masterPassword == null)
+            {
+                var enterMasterPasswordView = _getEnterMasterPasswordWindowView();
+
+                if (enterMasterPasswordView.ShowDialog() != true)
+                {
+                    _serializedAccountsFilePath = null;
+                    return;
+                }
+
+                if (!(enterMasterPasswordView.DataContext is EnterMasterPasswordWindowViewModel enterMasterPasswordViewModel))
+                {
+                    _serializedAccountsFilePath = null;
+                    return;
+                }
+
+                _masterPassword = enterMasterPasswordViewModel.MasterPassword.Copy();
+            }
 
             try
             {
                 var accounts = Accounts.Select(x => x.GetModel()).ToList();
-                await _accountsLogic.SaveAccounts(accounts, _serializedAccountsFilePath, FakePassword);
+                await _accountsLogic.SaveAccounts(accounts, _serializedAccountsFilePath, _masterPassword.Copy());
             }
             catch (EncryptException)
             {

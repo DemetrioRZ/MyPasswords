@@ -57,6 +57,10 @@
       <DependentUpon>EditAccountWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="EditAccountWindowViewModel.cs" />
+    <Compile Include="EnterMasterPasswordWindow.xaml.cs">
+      <DependentUpon>EnterMasterPasswordWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EnterMasterPasswordWindowViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -74,6 +78,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="EditAccountWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EnterMasterPasswordWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

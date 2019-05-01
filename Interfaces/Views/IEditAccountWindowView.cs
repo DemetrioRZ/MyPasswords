@@ -1,6 +1,4 @@
-﻿using Model;
-
-namespace Interfaces.Views
+﻿namespace Interfaces.Views
 {
     /// <summary>
     /// Интерфейс редактора аккаунта.

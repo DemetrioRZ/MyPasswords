@@ -1,5 +1,8 @@
 ﻿namespace Interfaces.Views
 {
+    /// <summary>
+    /// Общий интерфейс для окон.
+    /// </summary>
     public interface IView
     {
         object DataContext { get; }
