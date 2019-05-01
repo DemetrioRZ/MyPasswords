@@ -28,7 +28,12 @@ namespace Views
         /// <summary>
         /// Функтор получения окна ввода мастер пароля.
         /// </summary>
-        private readonly Func<IEnterMasterPasswordView> _getEnterMasterPasswordWindowView;
+        private readonly Func<IEnterMasterPasswordView> _getEnterMasterPasswordView;
+
+        /// <summary>
+        /// Функтор получения окна создания мастер пароля.
+        /// </summary>
+        private readonly Func<ICreateMasterPasswordView> _getCreateMasterPasswordView;
 
         /// <summary>
         /// Путь к сериализованному файлу с аккаунтами.
@@ -56,15 +61,18 @@ namespace Views
         /// </summary>
         /// <param name="accountsLogic">Логика работы с аккаунтами</param>
         /// <param name="getEditAccountWindowView">Функтор получения окна редактора аккаунта</param>
-        /// <param name="getEnterMasterPasswordWindowView">Функтор получения окна ввода мастер пароля</param>
+        /// <param name="getEnterMasterPasswordView">Функтор получения окна ввода мастер пароля</param>
+        /// <param name="getCreateMasterPasswordView">Функтор получения окна создания мастер пароля</param>
         public MainViewModel(
             IAccountsLogic accountsLogic, 
             Func<IEditAccountView> getEditAccountWindowView, 
-            Func<IEnterMasterPasswordView> getEnterMasterPasswordWindowView)
+            Func<IEnterMasterPasswordView> getEnterMasterPasswordView, 
+            Func<ICreateMasterPasswordView> getCreateMasterPasswordView)
         {
             _accountsLogic = accountsLogic;
             _getEditAccountWindowView = getEditAccountWindowView;
-            _getEnterMasterPasswordWindowView = getEnterMasterPasswordWindowView;
+            _getEnterMasterPasswordView = getEnterMasterPasswordView;
+            _getCreateMasterPasswordView = getCreateMasterPasswordView;
 
             InitializeCommands();
         }
@@ -182,7 +190,7 @@ namespace Views
             if (string.IsNullOrWhiteSpace(_serializedAccountsFilePath))
                 return;
 
-            var enterMasterPasswordView = _getEnterMasterPasswordWindowView();
+            var enterMasterPasswordView = _getEnterMasterPasswordView();
 
             if (enterMasterPasswordView.ShowDialog() != true)
             {
@@ -231,21 +239,22 @@ namespace Views
             
             if (_masterPassword == null)
             {
-                var enterMasterPasswordView = _getEnterMasterPasswordWindowView();
+                var createMasterPasswordView = _getCreateMasterPasswordView();
 
-                if (enterMasterPasswordView.ShowDialog() != true)
+                
+                if (createMasterPasswordView.ShowDialog() != true)
                 {
                     _serializedAccountsFilePath = null;
                     return;
                 }
 
-                if (!(enterMasterPasswordView.DataContext is EnterMasterPasswordViewModel enterMasterPasswordViewModel))
+                if (!(createMasterPasswordView.DataContext is CreateMasterPasswordViewModel createMasterPasswordViewModel))
                 {
                     _serializedAccountsFilePath = null;
                     return;
                 }
 
-                _masterPassword = enterMasterPasswordViewModel.MasterPassword.Copy();
+                _masterPassword = createMasterPasswordViewModel.MasterPassword.Copy();
             }
 
             try

@@ -64,6 +64,7 @@ namespace MyPasswords
             builder.RegisterType<MainWindow>().As<IMainView>().InstancePerDependency();
             builder.RegisterType<EditAccountWindow>().As<IEditAccountView>().InstancePerDependency();
             builder.RegisterType<EnterMasterPasswordWindow>().As<IEnterMasterPasswordView>().InstancePerDependency();
+            builder.RegisterType<CreateMasterPasswordWindow>().As<ICreateMasterPasswordView>().InstancePerDependency();
             builder.RegisterType<WindowSizeRestorer>().SingleInstance();
         }
 
@@ -76,6 +77,7 @@ namespace MyPasswords
             builder.RegisterType<MainViewModel>().InstancePerDependency();
             builder.RegisterType<EditAccountViewModel>().InstancePerDependency();
             builder.RegisterType<EnterMasterPasswordViewModel>().InstancePerDependency();
+            builder.RegisterType<CreateMasterPasswordViewModel>().InstancePerDependency();
         }
 
         /// <summary>

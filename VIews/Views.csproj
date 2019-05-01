@@ -53,6 +53,11 @@
     <Compile Include="Common\Command.cs" />
     <Compile Include="Common\ViewModelBase.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
+    <Compile Include="Converters\VisibilityConverterHidden.cs" />
+    <Compile Include="CreateMasterPasswordViewModel.cs" />
+    <Compile Include="CreateMasterPasswordWindow.xaml.cs">
+      <DependentUpon>CreateMasterPasswordWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EditAccountWindow.xaml.cs">
       <DependentUpon>EditAccountWindow.xaml</DependentUpon>
     </Compile>
@@ -77,6 +82,10 @@
     <Compile Include="Common\WindowSizeRestorer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="CreateMasterPasswordWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="EditAccountWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
