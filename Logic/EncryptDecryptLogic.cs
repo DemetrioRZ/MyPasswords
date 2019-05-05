@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
@@ -12,42 +11,105 @@ namespace Logic
 {
     public class EncryptDecryptLogic : IEncryptDecryptLogic
     {
+        /// <summary>
+        /// Длина соли в байтах.
+        /// </summary>
         private const int SaltLength = 8;
 
+        /// <summary>
+        /// Длина соли в символах Base64.
+        /// </summary>
+        private const int SaltBase64Length = 12;
+
+        /// <summary>
+        /// Размер ключа в битах.
+        /// </summary>
+        private const int KeySize = 256;
+
+        /// <summary>
+        /// Размер блока в битах.
+        /// </summary>
+        private const int BlockSize = 128;
+
+        /// <summary>
+        /// :)
+        /// </summary>
+        private const int BitsInByte = 8;
+
+        /// <summary>
+        /// Количество итераций для получения ключа.
+        /// </summary>
+        private const int Iterations = 1000;
+
+        /// <summary>
+        /// Асинхронно расшифрует json с паролями.
+        /// </summary>
+        /// <param name="encryptedJson">зашифрованный json</param>
+        /// <param name="masterPassword">мастер пароль</param>
+        /// <returns>расшифрованный текст</returns>
         public async Task<string> DecryptAsync(string encryptedJson, SecureString masterPassword)
         {
             return await Task.Run(() =>
             {
-                var decryptedText = AesDecrypt(encryptedJson, masterPassword.ToUnsecure());
+                try
+                {
+                    var decryptedText = AesDecrypt(encryptedJson, masterPassword);
 
-                return decryptedText;
+                    return decryptedText;
+                }
+                catch (CryptographicException ex)
+                {
+                    // todo: добавить логи
+                    throw new DecryptException("DecryptError", ex);
+                }
             });
         }
 
-        public async Task<string> EncryptAsync(string json, SecureString key)
+        /// <summary>
+        /// Асинхронно шифрует json c паролями.
+        /// </summary>
+        /// <param name="json">json c паролями</param>
+        /// <param name="masterPassword">мастер пароль</param>
+        /// <returns>зашифрованный json</returns>
+        public async Task<string> EncryptAsync(string json, SecureString masterPassword)
         {
             return await Task.Run(() =>
             {
-                var encryptedText = AesEncrypt(json, key.ToUnsecure());
+                try
+                {
+                    var encryptedText = AesEncrypt(json, masterPassword);
 
-                return encryptedText;
+                    return encryptedText;
+                }
+                catch (CryptographicException ex)
+                {
+                    // todo: добавить логи
+                    throw new EncryptException("Encrypt error", ex);
+                }
             });
         }
 
-        private string AesEncrypt(string text, string password)
+        /// <summary>
+        /// Шифрует текст UTF8 указанным паролем.
+        /// </summary>
+        /// <param name="text">текст UTF8</param>
+        /// <param name="password">пароль</param>
+        /// <returns>зашифрованный текст в BASE64</returns>
+        [SecurityCritical]
+        private string AesEncrypt(string text, SecureString password)
         {
-            using (MemoryStream ms = new MemoryStream())
+            using (var ms = new MemoryStream())
             {
                 using (var aes = new RijndaelManaged())
                 {
-                    aes.KeySize = 256;
-                    aes.BlockSize = 128;
+                    aes.KeySize = KeySize;
+                    aes.BlockSize = BlockSize;
 
                     var salt = GetRandomBytes();
 
-                    var key = new Rfc2898DeriveBytes(password, salt, 1000);
-                    aes.Key = key.GetBytes(aes.KeySize / 8);
-                    aes.IV = key.GetBytes(aes.BlockSize / 8);
+                    var key = new Rfc2898DeriveBytes(password.ToUnsecure(), salt, Iterations, HashAlgorithmName.SHA256);
+                    aes.Key = key.GetBytes(aes.KeySize / BitsInByte);
+                    aes.IV = key.GetBytes(aes.BlockSize / BitsInByte);
 
                     aes.Mode = CipherMode.CBC;
 
@@ -64,26 +126,33 @@ namespace Logic
             }
         }
 
-        private string AesDecrypt(string text, string password)
+        /// <summary>
+        /// Расшифровывает текст указанным паролем.
+        /// </summary>
+        /// <param name="text">текст BASE64</param>
+        /// <param name="password"></param>
+        /// <returns>расшифрованный текст</returns>
+        [SecurityCritical]
+        private string AesDecrypt(string text, SecureString password)
         {
-            using (MemoryStream ms = new MemoryStream())
+            using (var ms = new MemoryStream())
             {
-                using (RijndaelManaged aes = new RijndaelManaged())
+                using (var aes = new RijndaelManaged())
                 {
-                    aes.KeySize = 256;
-                    aes.BlockSize = 128;
+                    aes.KeySize = KeySize;
+                    aes.BlockSize = BlockSize;
 
-                    var salt = Convert.FromBase64String(text.Substring(text.Length - 12, 12));
+                    var salt = Convert.FromBase64String(text.Substring(text.Length - SaltBase64Length, SaltBase64Length));
 
-                    var key = new Rfc2898DeriveBytes(password, salt, 1000);
-                    aes.Key = key.GetBytes(aes.KeySize / 8);
-                    aes.IV = key.GetBytes(aes.BlockSize / 8);
+                    var key = new Rfc2898DeriveBytes(password.ToUnsecure(), salt, Iterations, HashAlgorithmName.SHA256);
+                    aes.Key = key.GetBytes(aes.KeySize / BitsInByte);
+                    aes.IV = key.GetBytes(aes.BlockSize / BitsInByte);
 
                     aes.Mode = CipherMode.CBC;
 
                     using (var cs = new CryptoStream(ms, aes.CreateDecryptor(), CryptoStreamMode.Write))
                     {
-                        var bytesToBeDecrypted = Convert.FromBase64String(text.Substring(0, text.Length - 12));
+                        var bytesToBeDecrypted = Convert.FromBase64String(text.Substring(0, text.Length - SaltBase64Length));
                         cs.Write(bytesToBeDecrypted, 0, bytesToBeDecrypted.Length);
                         cs.Close();
                     }
