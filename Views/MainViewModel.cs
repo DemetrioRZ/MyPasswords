@@ -201,7 +201,7 @@ namespace Views
                 return;
 
             _serializedAccountsFilePath = null;
-            _masterPassword.Dispose();
+            _masterPassword?.Dispose();
             _masterPassword = null;
 
             Accounts = new ObservableCollection<AccountViewModel>(new List<AccountViewModel>());
@@ -270,7 +270,7 @@ namespace Views
         private async void SaveFileAs(object param)
         {
             _serializedAccountsFilePath = null;
-            _masterPassword.Dispose();
+            _masterPassword?.Dispose();
             _masterPassword = null;
             
             await SaveFileAsync(param);
