@@ -44,6 +44,16 @@ namespace Views
         private string _serializedAccountsFilePath;
 
         /// <summary>
+        /// Заголовок окна.
+        /// </summary>
+        private string _title;
+
+        /// <summary>
+        /// Название приложения для заголовка.
+        /// </summary>
+        private const string AppName = "MyPasswords";
+
+        /// <summary>
         /// Мастер пароль.
         /// </summary>
         [SecurityCritical]
@@ -78,6 +88,7 @@ namespace Views
             _getCreateMasterPasswordView = getCreateMasterPasswordView;
 
             InitializeCommands();
+            _title = AppName;
         }
 
         /// <summary>
@@ -136,6 +147,19 @@ namespace Views
         public bool CanShowHintLabel => _accounts == null;
 
         /// <summary>
+        /// Заголовок окна.
+        /// </summary>
+        public string Title
+        {
+            get => _title;
+            set
+            {
+                _title = $"{AppName} - {value}";
+                OnPropertyChanged(nameof(Title));
+            }
+        }
+
+        /// <summary>
         /// Выбранный аккаунт.
         /// </summary>
         public AccountViewModel SelectedAccount
@@ -173,6 +197,7 @@ namespace Views
             _masterPassword = null;
 
             Accounts = new ObservableCollection<AccountViewModel>(new List<AccountViewModel>());
+            Title = "New file";
         }
 
         /// <summary>
@@ -215,6 +240,7 @@ namespace Views
                 var accountViewModels = accounts.Select(x => new AccountViewModel().For(x)).ToList();
 
                 Accounts = new ObservableCollection<AccountViewModel>(accountViewModels);
+                Title = _serializedAccountsFilePath;
             }
             catch (DecryptException)
             {
@@ -264,6 +290,7 @@ namespace Views
             {
                 var accounts = Accounts.Select(x => x.GetModel()).ToList();
                 await _accountsLogic.SaveAccounts(accounts, _serializedAccountsFilePath, _masterPassword.Copy());
+                Title = _serializedAccountsFilePath;
             }
             catch (EncryptException)
             {

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Views"
         xmlns:converters="clr-namespace:Views.Converters"
         mc:Ignorable="d"
-        Title="MyPasswords" Height="450" MinHeight="200" Width="800" MinWidth="400" Closing="OnClosing">
+        Title="{Binding Title, UpdateSourceTrigger=PropertyChanged}" Height="450" MinHeight="200" Width="800" MinWidth="400" Closing="OnClosing">
 
     <Window.Resources>
         <converters:VisibilityConverterCollapsed x:Key="VisibilityConverterCollapsed"></converters:VisibilityConverterCollapsed>
