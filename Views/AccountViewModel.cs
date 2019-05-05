@@ -37,15 +37,28 @@ namespace Views
         }
 
         /// <summary>
-        /// Сайт ресурса.
+        /// Название ресурса.
         /// </summary>
-        public string WebSite
+        public string ResourceName
         {
-            get => _account.WebSite;
+            get => _account.ResourceName;
             set
             {
-                _account.WebSite = value;
-                OnPropertyChanged(nameof(WebSite));
+                _account.ResourceName = value;
+                OnPropertyChanged(nameof(ResourceName));
+            }
+        }
+
+        /// <summary>
+        /// Тип аккаунта, произвольное значение, почта, музыкальный сервис, игровой аккаунт и т д.
+        /// </summary>
+        public string AccountType
+        {
+            get => _account.AccountType;
+            set
+            {
+                _account.AccountType = value;
+                OnPropertyChanged(AccountType);
             }
         }
 

@@ -37,11 +37,17 @@ namespace Model
         public SecureString Password { get; set; }
 
         /// <summary>
-        /// Сайт ресурса
+        /// Название ресурса
         /// </summary>
         [DataMember]
-        public string WebSite { get; set; }
+        public string ResourceName { get; set; }
         
+        /// <summary>
+        /// Тип аккаунта, произвольное значение, почта, музыкальный сервис, важные аккаунты, устаревшие аккаунты и т д.
+        /// </summary>
+        [DataMember]
+        public string AccountType { get; set; }
+
         /// <summary>
         /// Комментарий к аккаунту
         /// </summary>

@@ -101,14 +101,11 @@
                 </DataGrid.InputBindings>
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Path=Login, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Header="Login" Width="140"></DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding Path=WebSite, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Header="Web site" Width="150"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Path=ResourceName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Header="Resource name" Width="150"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Path=AccountType, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Header="Account type" Width="150"></DataGridTextColumn>
                     <DataGridTextColumn Binding="{Binding Path=Comment, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Header="Comment" Width="*"></DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>
-
-        
-
-        
     </DockPanel>
 </Window>

@@ -13,6 +13,9 @@ using Views.Common;
 
 namespace Views
 {
+    /// <summary>
+    /// Модель представления вида основного окна.
+    /// </summary>
     public class MainViewModel : ViewModelBase
     {
         /// <summary>

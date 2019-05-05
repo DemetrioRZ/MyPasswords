@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Views"
         mc:Ignorable="d"
-        Title="EditAccountWindow" Height="270" Width="300" Loaded="OnLoaded" ResizeMode="CanMinimize" Closing="OnClosing">
+        Title="Edit account" Height="270" Width="300" Loaded="OnLoaded" ResizeMode="CanMinimize" Closing="OnClosing">
     
     <DockPanel>
         <Grid DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="80"></ColumnDefinition>
+                <ColumnDefinition Width="100"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -22,15 +22,19 @@
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="10"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="10"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
             <TextBlock Grid.Column="0" Grid.Row="1" Text="Login" Margin="10,0,0,0"></TextBlock>
             <TextBlock Grid.Column="0" Grid.Row="3" Text="Password" Margin="10,0,0,0"></TextBlock>
-            <TextBlock Grid.Column="0" Grid.Row="5" Text="Web site" Margin="10,0,0,0"></TextBlock>
-            <TextBlock Grid.Column="0" Grid.Row="7" Text="Comment" Margin="10,0,0,0"></TextBlock>
+            <TextBlock Grid.Column="0" Grid.Row="5" Text="Resource name" Margin="10,0,0,0"></TextBlock>
+            <TextBlock Grid.Column="0" Grid.Row="7" Text="Account type" Margin="10,0,0,0"></TextBlock>
+            <TextBlock Grid.Column="0" Grid.Row="9" Text="Comment" Margin="10,0,0,0"></TextBlock>
             <TextBox x:Name="LoginTextBox" Grid.Column="1" Grid.Row="1" Margin="0,0,10,0" Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"></TextBox>
             <local:PasswordControl x:Name="PasswordControl" Grid.Column="1" Grid.Row="3" Margin="0,0,10,0" PasswordChanged="OnPasswordChanged"></local:PasswordControl>
-            <TextBox Grid.Column="1" Grid.Row="5" Margin="0,0,10,0" Text="{Binding Website, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-            <TextBox Grid.Column="1" Grid.Row="7" Height="60" TextWrapping="Wrap" AcceptsReturn="False" Text="{Binding Comment, UpdateSourceTrigger=PropertyChanged}"
+            <TextBox Grid.Column="1" Grid.Row="5" Margin="0,0,10,0" Text="{Binding ResourceName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <TextBox Grid.Column="1" Grid.Row="7" Margin="0,0,10,0" Text="{Binding AccountType, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <TextBox Grid.Column="1" Grid.Row="9" Height="60" TextWrapping="Wrap" AcceptsReturn="False" Text="{Binding Comment, UpdateSourceTrigger=PropertyChanged}"
                      HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="0,0,10,0"></TextBox>
         </Grid>
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10">

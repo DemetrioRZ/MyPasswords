@@ -27,9 +27,14 @@ namespace Views
         private SecureString _password;
 
         /// <summary>
-        /// Сайт ресурса.
+        /// Название ресурса.
         /// </summary>
-        private string _website;
+        private string _resourceName;
+
+        /// <summary>
+        /// Тип аккаунта.
+        /// </summary>
+        private string _accountType;
 
         /// <summary>
         /// Комментарий.
@@ -75,7 +80,8 @@ namespace Views
 
                 Login = _account.Login;
                 Password = _account.Password.Copy();
-                Website = _account.WebSite;
+                ResourceName = _account.ResourceName;
+                AccountType = _account.AccountType;
                 Comment = _account.Comment;
             }
         }
@@ -112,15 +118,28 @@ namespace Views
         }
 
         /// <summary>
-        /// Сайт ресурса.
+        /// Название ресурса.
         /// </summary>
-        public string Website
+        public string ResourceName
         {
-            get => _website;
+            get => _resourceName;
             set
             {
-                _website = value;
-                OnPropertyChanged(nameof(Website));
+                _resourceName = value;
+                OnPropertyChanged(nameof(ResourceName));
+            }
+        }
+
+        /// <summary>
+        /// Тип аккаунта.
+        /// </summary>
+        public string AccountType
+        {
+            get => _accountType;
+            set
+            {
+                _accountType = value;
+                OnPropertyChanged(AccountType);
             }
         }
 
@@ -164,7 +183,8 @@ namespace Views
 
             EditingAccount.Login = Login;
             EditingAccount.Password = Password.Copy();
-            EditingAccount.WebSite = Website;
+            EditingAccount.ResourceName = ResourceName;
+            EditingAccount.AccountType = AccountType;
             EditingAccount.Comment = Comment;
             
             window.DialogResult = true;
@@ -177,7 +197,7 @@ namespace Views
         {
             return Password.Length > 0
                    && !string.IsNullOrWhiteSpace(Login)
-                   && !string.IsNullOrWhiteSpace(Website);
+                   && !string.IsNullOrWhiteSpace(ResourceName);
         }
 
         /// <summary>
