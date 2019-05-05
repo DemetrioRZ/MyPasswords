@@ -53,7 +53,7 @@
     <Compile Include="AccountViewModel.cs" />
     <Compile Include="Common\Command.cs" />
     <Compile Include="Common\ViewModelBase.cs" />
-    <Compile Include="Converters\VisibilityConverter.cs" />
+    <Compile Include="Converters\VisibilityConverterCollapsed.cs" />
     <Compile Include="Converters\VisibilityConverterHidden.cs" />
     <Compile Include="CreateMasterPasswordViewModel.cs" />
     <Compile Include="CreateMasterPasswordWindow.xaml.cs">

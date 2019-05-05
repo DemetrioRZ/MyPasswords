@@ -9,7 +9,7 @@
         Title="MyPasswords" Height="450" MinHeight="200" Width="800" MinWidth="400" Closing="OnClosing">
 
     <Window.Resources>
-        <converters:VisibilityConverter x:Key="VisibilityConverter"></converters:VisibilityConverter>
+        <converters:VisibilityConverterCollapsed x:Key="VisibilityConverterCollapsed"></converters:VisibilityConverterCollapsed>
     </Window.Resources>
 
     <DockPanel>
@@ -89,13 +89,13 @@
         <DockPanel DockPanel.Dock="Bottom" LastChildFill="True">
             <!-- подсказка -->
             <Label DockPanel.Dock="Bottom" Content="Create new or open an existing file with passwords." 
-                    Visibility="{Binding Path=CanShowHintLabel, Mode=OneWay, Converter={StaticResource VisibilityConverter}}"></Label>
+                    Visibility="{Binding Path=CanShowHintLabel, Mode=OneWay, Converter={StaticResource VisibilityConverterCollapsed}}"></Label>
 
             <!-- основной грид с паролями -->
             <DataGrid DockPanel.Dock="Top" Name="PasswordsGrid"
                       ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedAccount}"
                       IsReadOnly="True" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False" 
-                      Visibility="{Binding Path=CanShowGrid, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
+                      Visibility="{Binding Path=CanShowGrid, Mode=OneWay, Converter={StaticResource VisibilityConverterCollapsed}}">
                 <DataGrid.InputBindings>
                     <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding EditAccountCommand}" CommandParameter="{Binding SelectedAccount}"></MouseBinding>
                 </DataGrid.InputBindings>

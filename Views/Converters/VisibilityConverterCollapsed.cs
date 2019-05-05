@@ -5,7 +5,7 @@ using System.Windows.Data;
 
 namespace Views.Converters
 {
-    public class VisibilityConverter : IValueConverter
+    public class VisibilityConverterCollapsed : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
