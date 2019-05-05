@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Interfaces.Logic;
@@ -107,6 +108,11 @@ namespace Views
         public ICommand SaveFileCommand { get; private set; }
 
         /// <summary>
+        /// Команда сохранить как для файла с аккаунтами.
+        /// </summary>
+        public ICommand SaveFileAsCommand { get; private set; }
+
+        /// <summary>
         /// Команда создания нового аккаунта для хранения.
         /// </summary>
         public ICommand CreateAccountCommand { get; private set; }
@@ -179,7 +185,8 @@ namespace Views
         {
             NewFileCommand = new Command(NewFile);
             OpenFileCommand = new Command(OpenFileAsync);
-            SaveFileCommand = new Command(SaveFileAsync, x => Accounts != null);
+            SaveFileCommand = new Command(SaveFile, x => Accounts != null);
+            SaveFileAsCommand = new Command(SaveFileAs, x => Accounts != null);
             CreateAccountCommand = new Command(CreateAccount, x => Accounts != null);
             EditAccountCommand = new Command(EditAccount, x => Accounts != null && Accounts.Any() && SelectedAccount != null);
             DeleteAccountCommand = new Command(DeleteAccount, x => Accounts != null && Accounts.Any() && SelectedAccount != null);
@@ -194,6 +201,7 @@ namespace Views
                 return;
 
             _serializedAccountsFilePath = null;
+            _masterPassword.Dispose();
             _masterPassword = null;
 
             Accounts = new ObservableCollection<AccountViewModel>(new List<AccountViewModel>());
@@ -201,7 +209,7 @@ namespace Views
         }
 
         /// <summary>
-        /// Команда открытия файла с аккаунтами.
+        /// Открывает новый файл с аккаунтами.
         /// </summary>
         private async void OpenFileAsync(object param)
         {
@@ -251,7 +259,27 @@ namespace Views
         /// <summary>
         /// Сохраняет файл с аккаунтами на диск.
         /// </summary>
-        private async void SaveFileAsync(object param)
+        private async void SaveFile(object param)
+        {
+            await SaveFileAsync(param);
+        }
+
+        /// <summary>
+        /// Сохраняет файл с аккаунтами на диск как новый.
+        /// </summary>
+        private async void SaveFileAs(object param)
+        {
+            _serializedAccountsFilePath = null;
+            _masterPassword.Dispose();
+            _masterPassword = null;
+            
+            await SaveFileAsync(param);
+        }
+
+        /// <summary>
+        /// Асинхронно сохраняет файл с аккаунтами.
+        /// </summary>
+        private async Task SaveFileAsync(object param)
         {
             if (string.IsNullOrWhiteSpace(_serializedAccountsFilePath))
             {
