@@ -144,5 +144,11 @@
   <ItemGroup>
     <Resource Include="Images\cross-24.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\key-64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\account-64.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
