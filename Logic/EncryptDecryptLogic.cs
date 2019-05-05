@@ -12,11 +12,13 @@ namespace Logic
 {
     public class EncryptDecryptLogic : IEncryptDecryptLogic
     {
+        private const int SaltLength = 8;
+
         public async Task<string> DecryptAsync(string encryptedJson, SecureString masterPassword)
         {
             return await Task.Run(() =>
             {
-                var decryptedText = Decrypt(masterPassword, encryptedJson);
+                var decryptedText = AesDecrypt(encryptedJson, masterPassword.ToUnsecure());
 
                 return decryptedText;
             });
@@ -26,137 +28,81 @@ namespace Logic
         {
             return await Task.Run(() =>
             {
-                var encryptedText = Encrypt(key, json);
+                var encryptedText = AesEncrypt(json, key.ToUnsecure());
 
                 return encryptedText;
             });
         }
 
-        [SecurityCritical]
-        private string Encrypt(SecureString masterPassword, string data)
+        private string AesEncrypt(string text, string password)
         {
-            try
+            using (MemoryStream ms = new MemoryStream())
             {
-                var keys = GetHashKeys(masterPassword.ToUnsecure());
-
-                var encData = EncryptStringToBytes_Aes(data, keys[0], keys[1]);
-            
-                return encData;
-            }
-            catch (CryptographicException ex)
-            {
-                // todo: добавить логирование исходного исключения
-                throw new EncryptException("Encrypt error", ex);
-            }
-            
-        }
-
-        [SecurityCritical]
-        private string Decrypt(SecureString masterPassword, string data)
-        {
-            try
-            {
-                var keys = GetHashKeys(masterPassword.ToUnsecure());
-            
-                var decData = DecryptStringFromBytes_Aes( data, keys[0], keys[1] );
-            
-                return decData;
-            }
-            catch (Exception ex)
-            {
-                // todo: добавить логирование исходного исключения
-                throw new DecryptException("Decrypt error", ex);
-            }
-        }
-
-        private byte[][] GetHashKeys(string key)
-        {
-            var result = new byte[2][];
-            var enc = Encoding.UTF8;
-
-            var sha256 = new SHA256CryptoServiceProvider();
-
-            var rawKey = enc.GetBytes(key);
-            var rawIV = enc.GetBytes(key);
-
-            var hashKey = sha256.ComputeHash(rawKey);
-            var hashIV = sha256.ComputeHash(rawIV);
-
-            Array.Resize(ref hashIV, 16);
-
-            result[0] = hashKey;
-            result[1] = hashIV;
-
-            return result;
-        }
-
-        private static string EncryptStringToBytes_Aes( string plainText, byte[] key, byte[] iv )
-        {
-            if ( string.IsNullOrWhiteSpace(plainText) )
-                throw new ArgumentNullException( nameof(plainText) );
-            if ( key == null || !key.Any() )
-                throw new ArgumentNullException( nameof(key) );
-            if ( iv == null || !iv.Any() )
-                throw new ArgumentNullException( nameof(iv) );
-
-            byte[] encrypted;
-
-            using ( AesManaged aesAlg = new AesManaged() )
-            {
-                aesAlg.Key = key;
-                aesAlg.IV = iv;
-
-                var encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
-
-                using ( MemoryStream msEncrypt = new MemoryStream() )
+                using (var aes = new RijndaelManaged())
                 {
-                    using ( CryptoStream csEncrypt = new CryptoStream( msEncrypt, encryptor, CryptoStreamMode.Write ) )
+                    aes.KeySize = 256;
+                    aes.BlockSize = 128;
+
+                    var salt = GetRandomBytes();
+
+                    var key = new Rfc2898DeriveBytes(password, salt, 1000);
+                    aes.Key = key.GetBytes(aes.KeySize / 8);
+                    aes.IV = key.GetBytes(aes.BlockSize / 8);
+
+                    aes.Mode = CipherMode.CBC;
+
+                    using (var cs = new CryptoStream(ms, aes.CreateEncryptor(), CryptoStreamMode.Write))
                     {
-                        using ( StreamWriter swEncrypt = new StreamWriter( csEncrypt ) )
-                        {
-                            swEncrypt.Write( plainText );
-                        }
-                        encrypted = msEncrypt.ToArray();
+                        var bytesToBeEncrypted = Encoding.UTF8.GetBytes(text);
+                        cs.Write(bytesToBeEncrypted, 0, bytesToBeEncrypted.Length);
+                        cs.Close();
                     }
+                    var encryptedBytes = ms.ToArray();
+
+                    return Convert.ToBase64String(encryptedBytes) + Convert.ToBase64String(salt);
                 }
             }
-
-            return Convert.ToBase64String( encrypted );
         }
 
-        private static string DecryptStringFromBytes_Aes( string cipherTextString, byte[] key, byte[] iv )
+        private string AesDecrypt(string text, string password)
         {
-            if ( string.IsNullOrWhiteSpace(cipherTextString) )
-                throw new ArgumentNullException( nameof(cipherTextString) );
-            if ( key == null || !key.Any() )
-                throw new ArgumentNullException( nameof(key) );
-            if ( iv == null || !iv.Any() )
-                throw new ArgumentNullException( nameof(iv) );
-
-            var cipherText = Convert.FromBase64String(cipherTextString);
-            
-            string plaintext = null;
-
-            using (AesManaged aesAlg = new AesManaged())
+            using (MemoryStream ms = new MemoryStream())
             {
-                aesAlg.Key = key;
-                aesAlg.IV = iv;
-
-                var decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
-
-                using (var msDecrypt = new MemoryStream(cipherText))
+                using (RijndaelManaged aes = new RijndaelManaged())
                 {
-                    using (var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read) )
+                    aes.KeySize = 256;
+                    aes.BlockSize = 128;
+
+                    var salt = Convert.FromBase64String(text.Substring(text.Length - 12, 12));
+
+                    var key = new Rfc2898DeriveBytes(password, salt, 1000);
+                    aes.Key = key.GetBytes(aes.KeySize / 8);
+                    aes.IV = key.GetBytes(aes.BlockSize / 8);
+
+                    aes.Mode = CipherMode.CBC;
+
+                    using (var cs = new CryptoStream(ms, aes.CreateDecryptor(), CryptoStreamMode.Write))
                     {
-                        using (var srDecrypt = new StreamReader(csDecrypt) )
-                        {
-                            plaintext = srDecrypt.ReadToEnd();
-                        }
+                        var bytesToBeDecrypted = Convert.FromBase64String(text.Substring(0, text.Length - 12));
+                        cs.Write(bytesToBeDecrypted, 0, bytesToBeDecrypted.Length);
+                        cs.Close();
                     }
+                    var decryptedBytes = ms.ToArray();
+
+                    return Encoding.UTF8.GetString(decryptedBytes);
                 }
             }
+        }
 
-            return plaintext;
+        /// <summary>
+        /// RNGCryptoServiceProvider
+        /// </summary>
+        /// <returns></returns>
+        private byte[] GetRandomBytes()
+        {
+            var ba = new byte[SaltLength];
+            RandomNumberGenerator.Create().GetBytes(ba);
+            return ba;
         }
     }
 }
