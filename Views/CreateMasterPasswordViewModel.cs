@@ -1,5 +1,4 @@
 ﻿using System.Security;
-using System.Windows;
 using System.Windows.Input;
 using Interfaces.Views;
 using Model;
