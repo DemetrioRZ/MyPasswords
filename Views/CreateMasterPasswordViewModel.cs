@@ -7,21 +7,42 @@ using Views.Common;
 
 namespace Views
 {
+    /// <summary>
+    /// Модель представления вида окна создания пароля.
+    /// </summary>
     public class CreateMasterPasswordViewModel : ViewModelBase
     {
+        /// <summary>
+        /// Минимальная длина пароля.
+        /// </summary>
         private const int MinPasswordLength = 12;
 
+        /// <summary>
+        /// Мастер пароль.
+        /// </summary>
         private SecureString _masterPassword;
 
+        /// <summary>
+        /// Повтор мастер пароля.
+        /// </summary>
         private SecureString _repeatMasterPassword;
 
+        /// <summary>
+        /// Отобразить пароль.
+        /// </summary>
         private bool _showPassword;
 
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
         public CreateMasterPasswordViewModel()
         {
             InitializeCommands();
         }
 
+        /// <summary>
+        /// Инициализация команд.
+        /// </summary>
         private void InitializeCommands()
         {
             OkCommand = new Command(Ok, CanOk);
@@ -38,6 +59,9 @@ namespace Views
         /// </summary>
         public ICommand CancelCommand { get; private set; }
 
+        /// <summary>
+        /// Мастер пароль.
+        /// </summary>
         public SecureString MasterPassword
         {
             [SecurityCritical] get => _masterPassword;
@@ -51,6 +75,9 @@ namespace Views
             }
         }
 
+        /// <summary>
+        /// Повтор мастер пароля.
+        /// </summary>
         public SecureString RepeatMasterPassword
         {
             [SecurityCritical] get => _repeatMasterPassword;
@@ -63,6 +90,9 @@ namespace Views
             }
         }
 
+        /// <summary>
+        /// Показать пароль.
+        /// </summary>
         public bool ShowPassword
         {
             [SecurityCritical] get => _showPassword;
@@ -70,9 +100,13 @@ namespace Views
             {
                 _showPassword = value;
                 OnPropertyChanged(nameof(ShowPassword));
+                OnPropertyChanged(nameof(PasswordsMismatch));
             }
         }
 
+        /// <summary>
+        /// Осталось ввести символов для достаточной длины пароля.
+        /// </summary>
         public string SymbolsLeftHint
         {
             get
@@ -87,9 +121,12 @@ namespace Views
             }
         }
 
+        /// <summary>
+        /// Отображать подсказку о несовпадении паролей.
+        /// </summary>
         public bool PasswordsMismatch
         {
-            [SecurityCritical] get => MasterPassword?.ToUnsecure() != RepeatMasterPassword?.ToUnsecure();
+            [SecurityCritical] get => !ShowPassword && MasterPassword?.ToUnsecure() != RepeatMasterPassword?.ToUnsecure();
         }
 
         /// <summary>
@@ -129,11 +166,12 @@ namespace Views
             if (ShowPassword)
                 return MasterPassword != null
                        && MasterPassword.Length >= MinPasswordLength;
-            
+
             return MasterPassword != null
                    && MasterPassword.Length >= MinPasswordLength
                    && RepeatMasterPassword != null
-                   && RepeatMasterPassword.Length == MasterPassword.Length;
+                   && RepeatMasterPassword.Length == MasterPassword.Length
+                   && !PasswordsMismatch;
         }
 
         /// <summary>
