@@ -27,3 +27,5 @@
 /MyPasswordsSetup/Debug
 /Views/obj/Release
 /Views/bin/Release
+/View/bin
+/View/obj
