@@ -58,7 +58,7 @@ namespace Views
             set
             {
                 _account.AccountType = value;
-                OnPropertyChanged(AccountType);
+                OnPropertyChanged(nameof(AccountType));
             }
         }
 
