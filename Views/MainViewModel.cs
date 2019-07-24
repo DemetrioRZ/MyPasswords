@@ -5,6 +5,8 @@ using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using Interfaces.Logic;
 using Interfaces.Views;
@@ -38,6 +40,11 @@ namespace Views
         /// Функтор получения окна создания мастер пароля.
         /// </summary>
         private readonly Func<ICreateMasterPasswordView> _getCreateMasterPasswordView;
+
+        /// <summary>
+        /// Создатель документов для печати.
+        /// </summary>
+        private readonly FlowDocumentCreator _flowDocumentCreator;
 
         /// <summary>
         /// Путь к сериализованному файлу с аккаунтами.
@@ -81,12 +88,13 @@ namespace Views
             IAccountsLogic accountsLogic, 
             Func<IEditAccountView> getEditAccountWindowView, 
             Func<IEnterMasterPasswordView> getEnterMasterPasswordView, 
-            Func<ICreateMasterPasswordView> getCreateMasterPasswordView)
+            Func<ICreateMasterPasswordView> getCreateMasterPasswordView, FlowDocumentCreator flowDocumentCreator)
         {
             _accountsLogic = accountsLogic;
             _getEditAccountWindowView = getEditAccountWindowView;
             _getEnterMasterPasswordView = getEnterMasterPasswordView;
             _getCreateMasterPasswordView = getCreateMasterPasswordView;
+            _flowDocumentCreator = flowDocumentCreator;
 
             InitializeCommands();
             _title = AppName;
@@ -126,6 +134,11 @@ namespace Views
         /// Команда удаления выбранного аккаунта.
         /// </summary>
         public ICommand DeleteAccountCommand { get; private set; }
+
+        /// <summary>
+        /// Команда печати файла с аккаунтами.
+        /// </summary>
+        public ICommand PrintCommand { get; private set; }
 
         /// <summary>
         /// Коллекция отображаемых аккаунтов
@@ -190,6 +203,7 @@ namespace Views
             CreateAccountCommand = new Command(CreateAccount, x => Accounts != null);
             EditAccountCommand = new Command(EditAccount, x => Accounts != null && Accounts.Any() && SelectedAccount != null);
             DeleteAccountCommand = new Command(DeleteAccount, x => Accounts != null && Accounts.Any() && SelectedAccount != null);
+            PrintCommand = new Command(PrintAccounts, x => Accounts != null && Accounts.Any());
         }
 
         /// <summary>
@@ -376,6 +390,22 @@ namespace Views
 
             Accounts.Remove(account);
             account.Password.Dispose();
+        }
+
+        /// <summary>
+        /// Запускает диалог печати открытого файла с аккаунтами.
+        /// </summary>
+        private void PrintAccounts(object param)
+        {
+            var flowDocument = _flowDocumentCreator.Create(Accounts.Select(x => x.GetModel()).ToList());
+            
+            var printDialog = new PrintDialog();
+            var paginatorSource = (IDocumentPaginatorSource) flowDocument;
+
+            if (printDialog.ShowDialog() == true)
+                printDialog.PrintDocument(paginatorSource.DocumentPaginator, _serializedAccountsFilePath);
+
+            // todo: удалить flowDocument
         }
     }
 }

@@ -37,6 +37,11 @@
                             <Image Source="Images/save-24.png"></Image>
                         </MenuItem.Icon>
                     </MenuItem>
+                    <MenuItem Header="Print..." Command="{Binding PrintCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Images/print-24.png"></Image>
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
                 <MenuItem Header="Edit">
                     <MenuItem Header="Create Account" Command="{Binding CreateAccountCommand}">

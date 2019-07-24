@@ -66,6 +66,7 @@ namespace MyPasswords
             builder.RegisterType<EnterMasterPasswordWindow>().As<IEnterMasterPasswordView>().InstancePerDependency();
             builder.RegisterType<CreateMasterPasswordWindow>().As<ICreateMasterPasswordView>().InstancePerDependency();
             builder.RegisterType<WindowSizeRestorer>().SingleInstance();
+            builder.RegisterType<FlowDocumentCreator>().InstancePerDependency();
         }
 
         /// <summary>
