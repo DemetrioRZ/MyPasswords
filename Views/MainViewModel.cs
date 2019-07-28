@@ -230,7 +230,7 @@ namespace Views
             if (Accounts != null && MessageBox.Show("Open existing file?", "Open file", MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
                 return;
 
-            var ofd = new OpenFileDialog {Multiselect = false, Filter = "All files (*.*)|*.*"};
+            var ofd = new OpenFileDialog {Multiselect = false, Filter = "Gzip files (*.gz)|*.gz"};
             
             if (ofd.ShowDialog() != true)
                 return;
@@ -397,15 +397,17 @@ namespace Views
         /// </summary>
         private void PrintAccounts(object param)
         {
-            var flowDocument = _flowDocumentCreator.Create(Accounts.Select(x => x.GetModel()).ToList());
-            
             var printDialog = new PrintDialog();
-            var paginatorSource = (IDocumentPaginatorSource) flowDocument;
 
-            if (printDialog.ShowDialog() == true)
-                printDialog.PrintDocument(paginatorSource.DocumentPaginator, _serializedAccountsFilePath);
+            if (printDialog.ShowDialog() != true) 
+                return;
 
-            // todo: удалить flowDocument
+            var accounts = Accounts.Select(x => x.GetModel()).ToList();
+            var pageSize = new PageSize(printDialog.PrintableAreaWidth, printDialog.PrintableAreaHeight);
+            var flowDocument = _flowDocumentCreator.Create(_serializedAccountsFilePath, accounts, pageSize);
+            printDialog.PrintDocument(((IDocumentPaginatorSource) flowDocument).DocumentPaginator, _serializedAccountsFilePath);
+
+            flowDocument.Blocks.Clear();
         }
     }
 }
